@@ -6,308 +6,67 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Game Hub</title>
+<title>Neon Snake</title>
 
 <style>
 
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    margin: 0;
     background: #09090c;
     color: white;
-}
-
-/* NAVBAR */
-
-.navbar {
-    height: 70px;
-    background: #111116;
-    border-bottom: 1px solid #292930;
-
-    display: flex;
-    align-items: center;
-
-    padding: 0 35px;
-
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.logo {
-    font-size: 23px;
-    font-weight: bold;
-}
-
-.logo span {
-    color: #8b5cf6;
-}
-
-.nav-links {
-    display: flex;
-    gap: 25px;
-    margin-left: 35px;
-    margin-right: auto;
-}
-
-.nav-links a {
-    color: #aaa;
-    text-decoration: none;
-}
-
-.nav-links a:hover {
-    color: white;
-}
-
-.search {
-    width: 250px;
-    background: #19191f;
-    border: 1px solid #35353d;
-    color: white;
-    padding: 11px 15px;
-    border-radius: 8px;
-    outline: none;
-}
-
-/* MAIN */
-
-.container {
-    max-width: 1250px;
-    margin: auto;
-    padding: 40px 25px;
-}
-
-/* HERO */
-
-.hero {
-    background: linear-gradient(135deg, #171720, #0e0e13);
-    border: 1px solid #292930;
-    border-radius: 15px;
-    padding: 45px;
-    margin-bottom: 35px;
-}
-
-.hero h1 {
-    font-size: 42px;
-    margin-bottom: 10px;
-}
-
-.hero p {
-    color: #999;
-    margin-bottom: 25px;
-}
-
-.hero button {
-    background: #8b5cf6;
-    border: none;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.hero button:hover {
-    background: #7446d8;
-}
-
-/* SECTION */
-
-.section {
-    margin-bottom: 40px;
-}
-
-.section-title {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 18px;
-}
-
-.section-title h2 {
-    font-size: 23px;
-}
-
-.section-title span {
-    color: #777;
-}
-
-/* FEATURED */
-
-.featured {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 18px;
-}
-
-.featured-card {
-    min-height: 180px;
-    border-radius: 12px;
-    border: 1px solid #292930;
-
-    background: linear-gradient(135deg, #211c30, #101014);
-
-    padding: 25px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-
-    cursor: pointer;
-}
-
-.featured-card:hover {
-    border-color: #8b5cf6;
-}
-
-.featured-card h3 {
-    font-size: 22px;
-    margin-bottom: 5px;
-}
-
-.featured-card p {
-    color: #999;
-}
-
-/* CATEGORIES */
-
-.categories {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-}
-
-.category {
-    background: #17171d;
-    border: 1px solid #303039;
-    color: #aaa;
-
-    padding: 9px 15px;
-
-    border-radius: 7px;
-
-    cursor: pointer;
-}
-
-.category:hover,
-.category.active {
-    background: #8b5cf6;
-    border-color: #8b5cf6;
-    color: white;
-}
-
-/* GAMES */
-
-.games {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 18px;
-}
-
-.game {
-    background: #15151b;
-    border: 1px solid #292930;
-    border-radius: 11px;
-    overflow: hidden;
-}
-
-.game:hover {
-    border-color: #555;
-}
-
-.game-image {
-    height: 145px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 55px;
-
-    background: linear-gradient(135deg, #24242d, #101014);
-}
-
-.game-info {
-    padding: 15px;
-}
-
-.game-info h3 {
-    margin-bottom: 6px;
-}
-
-.game-info p {
-    color: #777;
-    font-size: 13px;
-}
-
-.play {
-    margin-top: 12px;
-
-    width: 100%;
-
-    background: #202027;
-    border: none;
-
-    color: white;
-
-    padding: 9px;
-
-    border-radius: 6px;
-
-    cursor: pointer;
-}
-
-.play:hover {
-    background: #8b5cf6;
-}
-
-/* FOOTER */
-
-footer {
-    border-top: 1px solid #24242b;
-
-    margin-top: 60px;
-
-    padding: 30px;
-
+    font-family: Arial, sans-serif;
     text-align: center;
-
-    color: #666;
 }
 
-/* MOBILE */
+h1 {
+    margin-top: 25px;
+    font-size: 32px;
+}
 
-@media (max-width: 700px) {
+p {
+    color: #999;
+}
 
-    .navbar {
-        padding: 0 15px;
-    }
+#game {
+    background: #111116;
+    border: 2px solid #333;
+    border-radius: 10px;
 
-    .nav-links {
-        display: none;
-    }
+    width: 500px;
+    height: 500px;
 
-    .search {
-        width: 170px;
-    }
+    max-width: 90vw;
+    max-height: 90vw;
+}
 
-    .container {
-        padding: 25px 15px;
-    }
+.info {
+    margin-top: 15px;
+    font-size: 18px;
+}
 
-    .hero {
-        padding: 30px;
-    }
+button {
+    margin-top: 20px;
 
-    .hero h1 {
-        font-size: 32px;
-    }
+    background: #8b5cf6;
+    color: white;
 
+    border: none;
+
+    padding: 12px 20px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+button:hover {
+    background: #7446d8;
 }
 
 </style>
@@ -318,509 +77,422 @@ footer {
 <body>
 
 
-<!-- NAVIGATION -->
+<h1>🐍 Neon Snake</h1>
 
-<nav class="navbar">
+<p>
+Use the arrow keys to move the snake.
+</p>
 
-    <div class="logo">
-        🎮 <span>Game</span> Hub
-    </div>
 
-    <div class="nav-links">
+<canvas
+    id="game"
+    width="500"
+    height="500">
+</canvas>
 
-        <a href="#">
-            Home
-        </a>
 
-        <a href="#games">
-            Games
-        </a>
+<div class="info">
 
-        <a href="#categories">
-            Categories
-        </a>
+    Score:
+    <span id="score">
+        0
+    </span>
 
-    </div>
+</div>
 
-    <input
-        class="search"
-        id="search"
-        type="text"
-        placeholder="🔎 Search games..."
-        onkeyup="searchGames()"
-    >
 
-</nav>
-
-
-
-<main class="container">
-
-
-<!-- HERO -->
-
-<section class="hero">
-
-    <h1>
-        Play. Have Fun.
-    </h1>
-
-    <p>
-        Discover browser games and play them instantly.
-    </p>
-
-    <button
-        onclick="document.getElementById('games').scrollIntoView()"
-    >
-        Browse Games
-    </button>
-
-</section>
-
-
-
-<!-- FEATURED -->
-
-<section class="section">
-
-    <div class="section-title">
-
-        <h2>
-            🔥 Featured
-        </h2>
-
-        <span>
-            Popular games
-        </span>
-
-    </div>
-
-
-    <div class="featured">
-
-
-        <!-- SNAKE -->
-
-        <div
-            class="featured-card"
-            onclick="window.location.href='/game-hub/games/snake/index.html'"
-        >
-
-            <h3>
-                🐍 Neon Snake
-            </h3>
-
-            <p>
-                Try to beat your high score.
-            </p>
-
-        </div>
-
-
-        <!-- RACING -->
-
-        <div class="featured-card">
-
-            <h3>
-                🏎️ Racing
-            </h3>
-
-            <p>
-                More games coming soon.
-            </p>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-
-<!-- CATEGORIES -->
-
-<section
-    class="section"
-    id="categories"
->
-
-    <div class="section-title">
-
-        <h2>
-            Categories
-        </h2>
-
-    </div>
-
-
-    <div class="categories">
-
-        <button
-            class="category active"
-            onclick="filterGames('all', this)"
-        >
-            All Games
-        </button>
-
-        <button
-            class="category"
-            onclick="filterGames('action', this)"
-        >
-            Action
-        </button>
-
-        <button
-            class="category"
-            onclick="filterGames('arcade', this)"
-        >
-            Arcade
-        </button>
-
-        <button
-            class="category"
-            onclick="filterGames('racing', this)"
-        >
-            Racing
-        </button>
-
-        <button
-            class="category"
-            onclick="filterGames('puzzle', this)"
-        >
-            Puzzle
-        </button>
-
-    </div>
-
-</section>
-
-
-
-<!-- GAMES -->
-
-<section
-    class="section"
-    id="games"
->
-
-    <div class="section-title">
-
-        <h2>
-            🎮 All Games
-        </h2>
-
-        <span id="gameCount">
-            1 game
-        </span>
-
-    </div>
-
-
-    <div
-        class="games"
-        id="gameList"
-    >
-
-
-        <!-- SNAKE -->
-
-        <div
-            class="game"
-            data-category="arcade"
-            data-name="Neon Snake"
-        >
-
-            <div class="game-image">
-                🐍
-            </div>
-
-
-            <div class="game-info">
-
-                <h3>
-                    Neon Snake
-                </h3>
-
-                <p>
-                    Arcade
-                </p>
-
-
-                <button
-                    class="play"
-                    onclick="window.location.href='/game-hub/games/snake/index.html'"
-                >
-                    Play Game
-                </button>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- RACING -->
-
-        <div
-            class="game"
-            data-category="racing"
-            data-name="Racing Game"
-        >
-
-            <div class="game-image">
-                🏎️
-            </div>
-
-            <div class="game-info">
-
-                <h3>
-                    Racing Game
-                </h3>
-
-                <p>
-                    Coming Soon
-                </p>
-
-                <button
-                    class="play"
-                    onclick="comingSoon()"
-                >
-                    Coming Soon
-                </button>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ZOMBIE -->
-
-        <div
-            class="game"
-            data-category="action"
-            data-name="Zombie Game"
-        >
-
-            <div class="game-image">
-                🧟
-            </div>
-
-            <div class="game-info">
-
-                <h3>
-                    Zombie Game
-                </h3>
-
-                <p>
-                    Coming Soon
-                </p>
-
-                <button
-                    class="play"
-                    onclick="comingSoon()"
-                >
-                    Coming Soon
-                </button>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- PUZZLE -->
-
-        <div
-            class="game"
-            data-category="puzzle"
-            data-name="Puzzle Game"
-        >
-
-            <div class="game-image">
-                🧩
-            </div>
-
-            <div class="game-info">
-
-                <h3>
-                    Puzzle Game
-                </h3>
-
-                <p>
-                    Coming Soon
-                </p>
-
-                <button
-                    class="play"
-                    onclick="comingSoon()"
-                >
-                    Coming Soon
-                </button>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- SPACE -->
-
-        <div
-            class="game"
-            data-category="arcade"
-            data-name="Space Game"
-        >
-
-            <div class="game-image">
-                🚀
-            </div>
-
-            <div class="game-info">
-
-                <h3>
-                    Space Game
-                </h3>
-
-                <p>
-                    Coming Soon
-                </p>
-
-                <button
-                    class="play"
-                    onclick="comingSoon()"
-                >
-                    Coming Soon
-                </button>
-
-            </div>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-</main>
-
-
-
-<footer>
-
-    Game Hub • Browser Games
-
-</footer>
+<button onclick="goHome()">
+    ← Back to Game Hub
+</button>
 
 
 
 <script>
 
 
-/* SEARCH */
+const canvas =
+    document.getElementById("game");
 
-function searchGames() {
-
-    const search =
-        document
-        .getElementById("search")
-        .value
-        .toLowerCase();
+const ctx =
+    canvas.getContext("2d");
 
 
-    const games =
-        document.querySelectorAll(".game");
+const gridSize = 25;
+
+const tileSize = 20;
 
 
-    let count = 0;
+let snake = [
+    {
+        x: 12,
+        y: 12
+    }
+];
 
 
-    games.forEach(game => {
-
-        const name =
-            game.dataset.name.toLowerCase();
-
-
-        if (name.includes(search)) {
-
-            game.style.display = "";
-
-            count++;
-
-        } else {
-
-            game.style.display = "none";
-
-        }
-
-    });
+let direction = {
+    x: 1,
+    y: 0
+};
 
 
-    document.getElementById("gameCount").textContent =
-        count + (count === 1 ? " game" : " games");
+let nextDirection = {
+    x: 1,
+    y: 0
+};
 
-}
+
+let food = createFood();
+
+
+let score = 0;
+
+let gameRunning = true;
 
 
 
-/* CATEGORY FILTER */
+/* KEYBOARD CONTROLS */
 
-function filterGames(category, button) {
+document.addEventListener(
+    "keydown",
+    function(event) {
 
-    const games =
-        document.querySelectorAll(".game");
-
-    const buttons =
-        document.querySelectorAll(".category");
-
-
-    buttons.forEach(btn => {
-        btn.classList.remove("active");
-    });
-
-
-    button.classList.add("active");
-
-
-    let count = 0;
-
-
-    games.forEach(game => {
 
         if (
-            category === "all" ||
-            game.dataset.category === category
+            event.key === "ArrowUp" &&
+            direction.y !== 1
         ) {
 
-            game.style.display = "";
-
-            count++;
-
-        } else {
-
-            game.style.display = "none";
+            nextDirection = {
+                x: 0,
+                y: -1
+            };
 
         }
 
-    });
+
+        if (
+            event.key === "ArrowDown" &&
+            direction.y !== -1
+        ) {
+
+            nextDirection = {
+                x: 0,
+                y: 1
+            };
+
+        }
 
 
-    document.getElementById("gameCount").textContent =
-        count + (count === 1 ? " game" : " games");
+        if (
+            event.key === "ArrowLeft" &&
+            direction.x !== 1
+        ) {
+
+            nextDirection = {
+                x: -1,
+                y: 0
+            };
+
+        }
+
+
+        if (
+            event.key === "ArrowRight" &&
+            direction.x !== -1
+        ) {
+
+            nextDirection = {
+                x: 1,
+                y: 0
+            };
+
+        }
+
+    }
+);
+
+
+
+/* CREATE FOOD */
+
+function createFood() {
+
+
+    let newFood;
+
+
+    do {
+
+        newFood = {
+
+            x:
+                Math.floor(
+                    Math.random() *
+                    gridSize
+                ),
+
+            y:
+                Math.floor(
+                    Math.random() *
+                    gridSize
+                )
+
+        };
+
+    } while (
+
+        snake.some(
+            part =>
+                part.x === newFood.x &&
+                part.y === newFood.y
+        )
+
+    );
+
+
+    return newFood;
 
 }
 
 
 
-/* COMING SOON */
+/* GAME UPDATE */
 
-function comingSoon() {
+function update() {
 
-    alert("This game hasn't been added yet!");
+
+    if (!gameRunning) {
+
+        return;
+
+    }
+
+
+    direction = nextDirection;
+
+
+    const newHead = {
+
+        x:
+            snake[0].x +
+            direction.x,
+
+        y:
+            snake[0].y +
+            direction.y
+
+    };
+
+
+    /* WALL COLLISION */
+
+    if (
+
+        newHead.x < 0 ||
+
+        newHead.x >= gridSize ||
+
+        newHead.y < 0 ||
+
+        newHead.y >= gridSize
+
+    ) {
+
+        endGame();
+
+        return;
+
+    }
+
+
+    /* SELF COLLISION */
+
+    if (
+
+        snake.some(
+
+            part =>
+
+                part.x === newHead.x &&
+                part.y === newHead.y
+
+        )
+
+    ) {
+
+        endGame();
+
+        return;
+
+    }
+
+
+    snake.unshift(newHead);
+
+
+    /* FOOD */
+
+    if (
+
+        newHead.x === food.x &&
+
+        newHead.y === food.y
+
+    ) {
+
+        score++;
+
+        document
+            .getElementById("score")
+            .textContent = score;
+
+        food = createFood();
+
+    }
+
+    else {
+
+        snake.pop();
+
+    }
+
+
+    draw();
+
+
+    setTimeout(
+        update,
+        90
+    );
 
 }
+
+
+
+/* DRAW GAME */
+
+function draw() {
+
+
+    /* BACKGROUND */
+
+    ctx.fillStyle =
+        "#111116";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* SNAKE */
+
+    ctx.fillStyle =
+        "#8b5cf6";
+
+
+    snake.forEach(
+        function(part) {
+
+            ctx.fillRect(
+
+                part.x *
+                    tileSize + 2,
+
+                part.y *
+                    tileSize + 2,
+
+                tileSize - 4,
+
+                tileSize - 4
+
+            );
+
+        }
+    );
+
+
+    /* FOOD */
+
+    ctx.fillStyle =
+        "white";
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+
+        food.x *
+            tileSize + 10,
+
+        food.y *
+            tileSize + 10,
+
+        7,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+
+    ctx.fill();
+
+}
+
+
+
+/* GAME OVER */
+
+function endGame() {
+
+
+    gameRunning = false;
+
+
+    draw();
+
+
+    setTimeout(
+
+        function() {
+
+            alert(
+                "Game Over! Your score was " +
+                score
+            );
+
+        },
+
+        100
+
+    );
+
+}
+
+
+
+/* HOME BUTTON */
+
+function goHome() {
+
+    window.location.href =
+        "/game-hub/";
+
+}
+
+
+
+/* START */
+
+draw();
+
+update();
 
 </script>
 
