@@ -23,6 +23,7 @@ body {
     min-height: 100vh;
 }
 
+
 /* NAVBAR */
 
 .navbar {
@@ -185,7 +186,7 @@ canvas {
 }
 
 
-/* MOBILE */
+/* MOBILE CONTROLS */
 
 .mobile-controls {
     display: none;
@@ -224,7 +225,7 @@ canvas {
     grid-column: 1;
 }
 
-.brake {
+.start {
     grid-column: 2;
 }
 
@@ -232,6 +233,8 @@ canvas {
     grid-column: 3;
 }
 
+
+/* MOBILE */
 
 @media (max-width: 600px) {
 
@@ -332,7 +335,7 @@ canvas {
     </div>
 
 
-    <!-- CANVAS -->
+    <!-- GAME -->
 
     <div class="game-wrapper">
 
@@ -374,19 +377,19 @@ canvas {
     </div>
 
 
-    <!-- MOBILE CONTROLS -->
+    <!-- MOBILE -->
 
     <div class="mobile-controls">
 
         <button
             class="left"
-            onclick="moveLeft()"
+            onclick="pressLeft()"
         >
             ◀
         </button>
 
         <button
-            class="brake"
+            class="start"
             onclick="startGame()"
         >
             ▶
@@ -394,7 +397,7 @@ canvas {
 
         <button
             class="right"
-            onclick="moveRight()"
+            onclick="pressRight()"
         >
             ▶
         </button>
@@ -434,7 +437,7 @@ const ctx =
 
 
 /* =========================
-   GAME SETTINGS
+   ROAD
 ========================= */
 
 const roadWidth = 360;
@@ -448,13 +451,14 @@ const laneWidth =
     roadWidth / 3;
 
 
+
 /* =========================
    PLAYER
 ========================= */
 
 let player = {
 
-    x: 220,
+    x: 227,
 
     y: 590,
 
@@ -462,9 +466,16 @@ let player = {
 
     height: 75,
 
-    speed: 7
+    velocity: 0,
+
+    acceleration: 0.8,
+
+    maxSpeed: 7,
+
+    friction: 0.82
 
 };
+
 
 
 /* =========================
@@ -472,6 +483,7 @@ let player = {
 ========================= */
 
 let traffic = [];
+
 
 
 /* =========================
@@ -482,14 +494,16 @@ let score = 0;
 
 let highScore =
     Number(
-        localStorage.getItem("racerHighScore")
+        localStorage.getItem(
+            "racerHighScore"
+        )
     ) || 0;
 
 let gameRunning = false;
 
 let gameOver = false;
 
-let gameLoop;
+let animation;
 
 let roadOffset = 0;
 
@@ -497,11 +511,23 @@ let trafficTimer = 0;
 
 
 /* =========================
+   INPUT
+========================= */
+
+let leftPressed = false;
+
+let rightPressed = false;
+
+
+
+/* =========================
    HIGH SCORE
 ========================= */
 
-document.getElementById("highScore")
-    .textContent = highScore;
+document
+    .getElementById("highScore")
+    .textContent =
+    highScore;
 
 
 
@@ -515,20 +541,29 @@ function startGame() {
         return;
     }
 
+
     if (gameOver) {
+
         restartGame();
+
     }
+
 
     gameRunning = true;
 
     gameOver = false;
 
-    document.getElementById("message")
+
+    document
+        .getElementById("message")
         .textContent =
         "Dodge the cars!";
 
-    gameLoop =
-        requestAnimationFrame(updateGame);
+
+    animation =
+        requestAnimationFrame(
+            updateGame
+        );
 
 }
 
@@ -540,11 +575,13 @@ function startGame() {
 
 function restartGame() {
 
-    cancelAnimationFrame(gameLoop);
+    cancelAnimationFrame(animation);
 
-    player.x = 220;
 
-    player.y = 590;
+    player.x = 227;
+
+    player.velocity = 0;
+
 
     traffic = [];
 
@@ -558,12 +595,18 @@ function restartGame() {
 
     gameOver = false;
 
-    document.getElementById("score")
-        .textContent = "0";
 
-    document.getElementById("message")
+    document
+        .getElementById("score")
+        .textContent =
+        "0";
+
+
+    document
+        .getElementById("message")
         .textContent =
         "Press Start Game or use A/D or Arrow Keys.";
+
 
     drawGame();
 
@@ -572,7 +615,109 @@ function restartGame() {
 
 
 /* =========================
-   UPDATE
+   PLAYER MOVEMENT
+========================= */
+
+function updatePlayer() {
+
+
+    /* ACCELERATE LEFT */
+
+    if (leftPressed) {
+
+        player.velocity -=
+            player.acceleration;
+
+    }
+
+
+    /* ACCELERATE RIGHT */
+
+    if (rightPressed) {
+
+        player.velocity +=
+            player.acceleration;
+
+    }
+
+
+    /* FRICTION */
+
+    if (
+        !leftPressed &&
+        !rightPressed
+    ) {
+
+        player.velocity *=
+            player.friction;
+
+    }
+
+
+    /* MAX SPEED */
+
+    if (
+        player.velocity >
+        player.maxSpeed
+    ) {
+
+        player.velocity =
+            player.maxSpeed;
+
+    }
+
+
+    if (
+        player.velocity <
+        -player.maxSpeed
+    ) {
+
+        player.velocity =
+            -player.maxSpeed;
+
+    }
+
+
+    /* MOVE */
+
+    player.x +=
+        player.velocity;
+
+
+    /* ROAD LIMIT */
+
+    const minX =
+        roadLeft + 8;
+
+    const maxX =
+        roadRight -
+        player.width -
+        8;
+
+
+    if (player.x < minX) {
+
+        player.x = minX;
+
+        player.velocity = 0;
+
+    }
+
+
+    if (player.x > maxX) {
+
+        player.x = maxX;
+
+        player.velocity = 0;
+
+    }
+
+}
+
+
+
+/* =========================
+   UPDATE GAME
 ========================= */
 
 function updateGame() {
@@ -582,12 +727,19 @@ function updateGame() {
     }
 
 
-    /* ROAD MOVEMENT */
+    /* PLAYER */
+
+    updatePlayer();
+
+
+    /* ROAD */
 
     roadOffset += 8;
 
     if (roadOffset >= 60) {
+
         roadOffset = 0;
+
     }
 
 
@@ -607,37 +759,50 @@ function updateGame() {
 
     /* MOVE TRAFFIC */
 
-    traffic.forEach(car => {
+    traffic.forEach(
+        car => {
 
-        car.y += car.speed;
+            car.y +=
+                car.speed;
 
-    });
+        }
+    );
 
 
-    /* REMOVE OLD CARS */
+    /* REMOVE TRAFFIC */
 
     traffic =
         traffic.filter(
-            car => car.y < canvas.height + 100
+            car =>
+                car.y <
+                canvas.height + 100
         );
 
 
     /* COLLISION */
 
-    for (let car of traffic) {
+    for (
+        let car of traffic
+    ) {
 
         if (
-            player.x <
-                car.x + car.width &&
 
-            player.x + player.width >
+            player.x <
+                car.x +
+                car.width &&
+
+            player.x +
+                player.width >
                 car.x &&
 
             player.y <
-                car.y + car.height &&
+                car.y +
+                car.height &&
 
-            player.y + player.height >
+            player.y +
+                player.height >
                 car.y
+
         ) {
 
             endGame();
@@ -653,27 +818,36 @@ function updateGame() {
 
     score += 0.1;
 
-    let displayScore =
+
+    const displayScore =
         Math.floor(score);
 
-    document.getElementById("score")
+
+    document
+        .getElementById("score")
         .textContent =
         displayScore;
 
 
     /* HIGH SCORE */
 
-    if (displayScore > highScore) {
+    if (
+        displayScore >
+        highScore
+    ) {
 
         highScore =
             displayScore;
+
 
         localStorage.setItem(
             "racerHighScore",
             highScore
         );
 
-        document.getElementById("highScore")
+
+        document
+            .getElementById("highScore")
             .textContent =
             highScore;
 
@@ -685,8 +859,10 @@ function updateGame() {
     drawGame();
 
 
-    gameLoop =
-        requestAnimationFrame(updateGame);
+    animation =
+        requestAnimationFrame(
+            updateGame
+        );
 
 }
 
@@ -703,6 +879,7 @@ function createTraffic() {
             Math.random() * 3
         );
 
+
     const x =
         roadLeft +
         lane * laneWidth +
@@ -710,12 +887,21 @@ function createTraffic() {
 
 
     const colors = [
+
         "#ef4444",
+
         "#3b82f6",
+
         "#22c55e",
+
         "#eab308",
+
         "#ec4899",
-        "#f97316"
+
+        "#f97316",
+
+        "#06b6d4"
+
     ];
 
 
@@ -756,7 +942,8 @@ function drawGame() {
 
     /* BACKGROUND */
 
-    ctx.fillStyle = "#111";
+    ctx.fillStyle =
+        "#111";
 
     ctx.fillRect(
         0,
@@ -768,7 +955,8 @@ function drawGame() {
 
     /* GRASS */
 
-    ctx.fillStyle = "#172217";
+    ctx.fillStyle =
+        "#172217";
 
     ctx.fillRect(
         0,
@@ -777,17 +965,20 @@ function drawGame() {
         canvas.height
     );
 
+
     ctx.fillRect(
         roadRight,
         0,
-        canvas.width - roadRight,
+        canvas.width -
+        roadRight,
         canvas.height
     );
 
 
     /* ROAD */
 
-    ctx.fillStyle = "#292929";
+    ctx.fillStyle =
+        "#292929";
 
     ctx.fillRect(
         roadLeft,
@@ -799,7 +990,9 @@ function drawGame() {
 
     /* ROAD EDGES */
 
-    ctx.fillStyle = "#ddd";
+    ctx.fillStyle =
+        "#ddd";
+
 
     ctx.fillRect(
         roadLeft,
@@ -807,6 +1000,7 @@ function drawGame() {
         5,
         canvas.height
     );
+
 
     ctx.fillRect(
         roadRight - 5,
@@ -818,17 +1012,26 @@ function drawGame() {
 
     /* LANE LINES */
 
-    ctx.fillStyle = "#eee";
+    ctx.fillStyle =
+        "#eee";
+
 
     for (
-        let y = -60 + roadOffset;
-        y < canvas.height;
+        let y =
+            -60 +
+            roadOffset;
+
+        y <
+        canvas.height;
+
         y += 60
     ) {
 
         ctx.fillRect(
 
-            roadLeft + laneWidth - 2,
+            roadLeft +
+            laneWidth -
+            2,
 
             y,
 
@@ -842,8 +1045,8 @@ function drawGame() {
         ctx.fillRect(
 
             roadLeft +
-                laneWidth * 2 -
-                2,
+            laneWidth * 2 -
+            2,
 
             y,
 
@@ -859,11 +1062,15 @@ function drawGame() {
     /* TRAFFIC */
 
     traffic.forEach(
-        car => drawCar(
-            car.x,
-            car.y,
-            car.color
-        )
+        car => {
+
+            drawCar(
+                car.x,
+                car.y,
+                car.color
+            );
+
+        }
     );
 
 
@@ -883,11 +1090,17 @@ function drawGame() {
    DRAW CAR
 ========================= */
 
-function drawCar(x, y, color) {
+function drawCar(
+    x,
+    y,
+    color
+) {
+
 
     /* BODY */
 
-    ctx.fillStyle = color;
+    ctx.fillStyle =
+        color;
 
     ctx.fillRect(
         x,
@@ -899,7 +1112,9 @@ function drawCar(x, y, color) {
 
     /* WINDOWS */
 
-    ctx.fillStyle = "#111";
+    ctx.fillStyle =
+        "#111";
+
 
     ctx.fillRect(
         x + 8,
@@ -919,7 +1134,9 @@ function drawCar(x, y, color) {
 
     /* LIGHTS */
 
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle =
+        "#fff";
+
 
     ctx.fillRect(
         x + 5,
@@ -927,6 +1144,7 @@ function drawCar(x, y, color) {
         8,
         5
     );
+
 
     ctx.fillRect(
         x + 32,
@@ -938,7 +1156,9 @@ function drawCar(x, y, color) {
 
     /* WHEELS */
 
-    ctx.fillStyle = "#050505";
+    ctx.fillStyle =
+        "#050505";
+
 
     ctx.fillRect(
         x - 4,
@@ -946,6 +1166,7 @@ function drawCar(x, y, color) {
         6,
         18
     );
+
 
     ctx.fillRect(
         x + 43,
@@ -954,12 +1175,14 @@ function drawCar(x, y, color) {
         18
     );
 
+
     ctx.fillRect(
         x - 4,
         y + 48,
         6,
         18
     );
+
 
     ctx.fillRect(
         x + 43,
@@ -973,53 +1196,33 @@ function drawCar(x, y, color) {
 
 
 /* =========================
-   MOVE LEFT
+   INPUT
 ========================= */
 
-function moveLeft() {
+function pressLeft() {
 
-    if (!gameRunning) {
-        return;
-    }
+    leftPressed = true;
 
-    player.x -= player.speed;
-
-    if (
-        player.x < roadLeft + 8
-    ) {
-
-        player.x =
-            roadLeft + 8;
-
-    }
+    setTimeout(
+        () => {
+            leftPressed = false;
+        },
+        150
+    );
 
 }
 
 
+function pressRight() {
 
-/* =========================
-   MOVE RIGHT
-========================= */
+    rightPressed = true;
 
-function moveRight() {
-
-    if (!gameRunning) {
-        return;
-    }
-
-    player.x += player.speed;
-
-    if (
-        player.x + player.width >
-        roadRight - 8
-    ) {
-
-        player.x =
-            roadRight -
-            player.width -
-            8;
-
-    }
+    setTimeout(
+        () => {
+            rightPressed = false;
+        },
+        150
+    );
 
 }
 
@@ -1033,26 +1236,33 @@ document.addEventListener(
     "keydown",
     function(event) {
 
+
         if (
+
             event.key === "ArrowLeft" ||
+
             event.key.toLowerCase() === "a"
+
         ) {
 
             event.preventDefault();
 
-            moveLeft();
+            leftPressed = true;
 
         }
 
 
         if (
+
             event.key === "ArrowRight" ||
+
             event.key.toLowerCase() === "d"
+
         ) {
 
             event.preventDefault();
 
-            moveRight();
+            rightPressed = true;
 
         }
 
@@ -1071,6 +1281,40 @@ document.addEventListener(
 );
 
 
+document.addEventListener(
+    "keyup",
+    function(event) {
+
+
+        if (
+
+            event.key === "ArrowLeft" ||
+
+            event.key.toLowerCase() === "a"
+
+        ) {
+
+            leftPressed = false;
+
+        }
+
+
+        if (
+
+            event.key === "ArrowRight" ||
+
+            event.key.toLowerCase() === "d"
+
+        ) {
+
+            rightPressed = false;
+
+        }
+
+    }
+);
+
+
 
 /* =========================
    GAME OVER
@@ -1082,10 +1326,14 @@ function endGame() {
 
     gameOver = true;
 
-    cancelAnimationFrame(gameLoop);
+
+    cancelAnimationFrame(
+        animation
+    );
 
 
-    document.getElementById("message")
+    document
+        .getElementById("message")
         .textContent =
         "💥 Game Over! Press Restart to try again.";
 
