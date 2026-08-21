@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Neon Racer</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    background: #09090c;
+
+    color: white;
+
+    font-family: Arial, sans-serif;
+
+    text-align: center;
+}
+
+h1 {
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+p {
+    color: #999;
+}
+
+#game {
+    background: #222;
+
+    border: 2px solid #333;
+
+    border-radius: 10px;
+
+    max-width: 95vw;
+}
+
+.info {
+    margin: 12px;
+
+    font-size: 18px;
+}
+
+button {
+    margin: 8px;
+
+    padding: 11px 18px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #8b5cf6;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+button:hover {
+    background: #7446d8;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>🏎️ Neon Racer</h1>
+
+<p>
+Use the arrow keys or WASD to drive.
+</p>
+
+
+<canvas
+    id="game"
+    width="700"
+    height="500">
+</canvas>
+
+
+<div class="info">
+
+    Speed:
+    <span id="speed">0</span>
+
+    km/h
+
+    &nbsp;&nbsp;
+
+    Distance:
+    <span id="distance">0</span>
+
+</div>
+
+
+<button onclick="restartGame()">
+    Restart
+</button>
+
+
+<button onclick="goHome()">
+    ← Game Hub
+</button>
+
+
+
+<script>
+
+
+const canvas =
+    document.getElementById("game");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+let car = {
+
+    x: 350,
+
+    y: 400,
+
+    width: 30,
+
+    height: 55,
+
+    speed: 0,
+
+    maxSpeed: 7,
+
+    acceleration: 0.12,
+
+    friction: 0.06
+
+};
+
+
+let roadOffset = 0;
+
+let distance = 0;
+
+let gameOver = false;
+
+
+let keys = {};
+
+
+let obstacles = [];
+
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        keys[event.key.toLowerCase()] = true;
+
+        if (
+            event.key === "ArrowUp" ||
+            event.key === "ArrowDown" ||
+            event.key === "ArrowLeft" ||
+            event.key === "ArrowRight"
+        ) {
+            event.preventDefault();
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    function(event) {
+
+        keys[event.key.toLowerCase()] = false;
+
+    }
+);
+
+
+
+function createObstacle() {
+
+    const roadLeft = 190;
+
+    const roadRight = 510;
+
+    obstacles.push({
+
+        x:
+            roadLeft +
+            Math.random() *
+            (roadRight - roadLeft),
+
+        y: -80,
+
+        width: 30,
+
+        height: 55,
+
+        speed:
+            2 +
+            Math.random() * 2
+
+    });
+
+}
+
+
+
+function update() {
+
+
+    if (gameOver) {
+
+        return;
+
+    }
+
+
+    /* ACCELERATE */
+
+    if (
+        keys["arrowup"] ||
+        keys["w"]
+    ) {
+
+        car.speed +=
+            car.acceleration;
+
+    }
+
+    else {
+
+        car.speed -=
+            car.friction;
+
+    }
+
+
+    /* BRAKE */
+
+    if (
+        keys["arrowdown"] ||
+        keys["s"]
+    ) {
+
+        car.speed -= 0.18;
+
+    }
+
+
+    if (car.speed < 0) {
+
+        car.speed = 0;
+
+    }
+
+
+    if (car.speed > car.maxSpeed) {
+
+        car.speed =
+            car.maxSpeed;
+
+    }
+
+
+    /* STEERING */
+
+    if (
+        keys["arrowleft"] ||
+        keys["a"]
+    ) {
+
+        car.x -=
+            4 +
+            car.speed * 0.3;
+
+    }
+
+
+    if (
+        keys["arrowright"] ||
+        keys["d"]
+    ) {
+
+        car.x +=
+            4 +
+            car.speed * 0.3;
+
+    }
+
+
+    /* ROAD BOUNDARIES */
+
+    if (car.x < 205) {
+
+        car.x = 205;
+
+    }
+
+
+    if (car.x > 465) {
+
+        car.x = 465;
+
+    }
+
+
+    /* ROAD MOVEMENT */
+
+    roadOffset +=
+        car.speed * 3;
+
+
+    if (roadOffset > 60) {
+
+        roadOffset = 0;
+
+    }
+
+
+    /* DISTANCE */
+
+    distance +=
+        car.speed * 0.05;
+
+
+    document.getElementById(
+        "speed"
+    ).textContent =
+        Math.floor(car.speed * 30);
+
+
+    document.getElementById(
+        "distance"
+    ).textContent =
+        Math.floor(distance);
+
+
+    /* SPAWN CARS */
+
+    if (
+        Math.random() < 0.018 &&
+        obstacles.length < 5
+    ) {
+
+        createObstacle();
+
+    }
+
+
+    /* MOVE OBSTACLES */
+
+    obstacles.forEach(
+        function(obstacle) {
+
+            obstacle.y +=
+                obstacle.speed +
+                car.speed * 0.5;
+
+        }
+    );
+
+
+    /* REMOVE OLD CARS */
+
+    obstacles =
+        obstacles.filter(
+            obstacle =>
+                obstacle.y < canvas.height + 100
+        );
+
+
+    /* COLLISION */
+
+    obstacles.forEach(
+        function(obstacle) {
+
+            if (
+                car.x - car.width / 2 <
+                    obstacle.x + obstacle.width / 2 &&
+
+                car.x + car.width / 2 >
+                    obstacle.x - obstacle.width / 2 &&
+
+                car.y - car.height / 2 <
+                    obstacle.y + obstacle.height / 2 &&
+
+                car.y + car.height / 2 >
+                    obstacle.y - obstacle.height / 2
+            ) {
+
+                endGame();
+
+            }
+
+        }
+    );
+
+
+    draw();
+
+
+    requestAnimationFrame(update);
+
+}
+
+
+
+function draw() {
+
+
+    /* GRASS */
+
+    ctx.fillStyle =
+        "#162116";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* ROAD */
+
+    ctx.fillStyle =
+        "#303036";
+
+    ctx.fillRect(
+        180,
+        0,
+        340,
+        canvas.height
+    );
+
+
+    /* ROAD EDGES */
+
+    ctx.fillStyle =
+        "#eeeeee";
+
+    ctx.fillRect(
+        180,
+        0,
+        8,
+        canvas.height
+    );
+
+    ctx.fillRect(
+        512,
+        0,
+        8,
+        canvas.height
+    );
+
+
+    /* ROAD LINES */
+
+    ctx.fillStyle =
+        "#eeeeee";
+
+
+    for (
+        let y = -60 + roadOffset;
+        y < canvas.height;
+        y += 60
+    ) {
+
+        ctx.fillRect(
+            345,
+            y,
+            10,
+            35
+        );
+
+    }
+
+
+    /* OBSTACLE CARS */
+
+    obstacles.forEach(
+        function(obstacle) {
+
+            drawOtherCar(
+                obstacle.x,
+                obstacle.y,
+                obstacle.width,
+                obstacle.height
+            );
+
+        }
+    );
+
+
+    /* PLAYER CAR */
+
+    drawPlayerCar();
+
+}
+
+
+
+function drawPlayerCar() {
+
+
+    const x =
+        car.x -
+        car.width / 2;
+
+    const y =
+        car.y -
+        car.height / 2;
+
+
+    /* BODY */
+
+    ctx.fillStyle =
+        "#8b5cf6";
+
+    ctx.fillRect(
+        x,
+        y,
+        car.width,
+        car.height
+    );
+
+
+    /* WINDSCREEN */
+
+    ctx.fillStyle =
+        "#9ee7ff";
+
+    ctx.fillRect(
+        x + 5,
+        y + 8,
+        car.width - 10,
+        15
+    );
+
+
+    /* REAR WINDOW */
+
+    ctx.fillRect(
+        x + 5,
+        y + 32,
+        car.width - 10,
+        10
+    );
+
+
+    /* WHEELS */
+
+    ctx.fillStyle =
+        "#080808";
+
+
+    ctx.fillRect(
+        x - 5,
+        y + 8,
+        5,
+        15
+    );
+
+    ctx.fillRect(
+        x + car.width,
+        y + 8,
+        5,
+        15
+    );
+
+    ctx.fillRect(
+        x - 5,
+        y + 34,
+        5,
+        15
+    );
+
+    ctx.fillRect(
+        x + car.width,
+        y + 34,
+        5,
+        15
+    );
+
+}
+
+
+
+function drawOtherCar(
+    x,
+    y,
+    width,
+    height
+) {
+
+
+    const left =
+        x -
+        width / 2;
+
+
+    const top =
+        y -
+        height / 2;
+
+
+    ctx.fillStyle =
+        "#e63946";
+
+    ctx.fillRect(
+        left,
+        top,
+        width,
+        height
+    );
+
+
+    ctx.fillStyle =
+        "#222";
+
+    ctx.fillRect(
+        left + 5,
+        top + 8,
+        width - 10,
+        15
+    );
+
+
+    ctx.fillRect(
+        left + 5,
+        top + 32,
+        width - 10,
+        10
+    );
+
+}
+
+
+
+function endGame() {
+
+
+    gameOver = true;
+
+
+    setTimeout(
+        function() {
+
+            alert(
+                "💥 CRASH!\n\nDistance: " +
+                Math.floor(distance) +
+                "m"
+            );
+
+        },
+        100
+    );
+
+}
+
+
+
+function restartGame() {
+
+
+    car.x = 350;
+
+    car.y = 400;
+
+    car.speed = 0;
+
+    distance = 0;
+
+    roadOffset = 0;
+
+    obstacles = [];
+
+    gameOver = false;
+
+
+    update();
+
+}
+
+
+
+function goHome() {
+
+    window.location.href =
+        "/game-hub/";
+
+}
+
+
+draw();
+
+update();
+
+</script>
+
+
+</body>
+
+</html>
