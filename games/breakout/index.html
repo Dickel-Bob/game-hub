@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Neon Breakout</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #09090c;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+p {
+    color: #999;
+}
+
+#game {
+    background: #111116;
+    border: 2px solid #333;
+    border-radius: 10px;
+    max-width: 95vw;
+}
+
+.info {
+    margin: 12px;
+    font-size: 18px;
+}
+
+button {
+    margin: 8px;
+    padding: 11px 18px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: #8b5cf6;
+    color: white;
+
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #7446d8;
+}
+
+#message {
+    min-height: 25px;
+    color: #aaa;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>🧱 Neon Breakout</h1>
+
+<p>
+Move the paddle with A/D or the arrow keys.
+</p>
+
+
+<div class="info">
+
+    Score:
+    <span id="score">0</span>
+
+    &nbsp;&nbsp;
+
+    Lives:
+    <span id="lives">3</span>
+
+</div>
+
+
+<canvas
+    id="game"
+    width="700"
+    height="500">
+</canvas>
+
+
+<div id="message">
+    Press Start Game to begin.
+</div>
+
+
+<button onclick="startGame()">
+    Start Game
+</button>
+
+<button onclick="restartGame()">
+    Restart
+</button>
+
+<button onclick="goHome()">
+    ← Game Hub
+</button>
+
+
+
+<script>
+
+const canvas =
+    document.getElementById("game");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+/* PADDLE */
+
+const paddle = {
+
+    x: 300,
+
+    y: 460,
+
+    width: 100,
+
+    height: 12,
+
+    speed: 8
+
+};
+
+
+/* BALL */
+
+const ball = {
+
+    x: 350,
+
+    y: 430,
+
+    size: 10,
+
+    speedX: 4,
+
+    speedY: -4
+
+};
+
+
+/* GAME */
+
+let score = 0;
+
+let lives = 3;
+
+let gameRunning = false;
+
+let keys = {};
+
+
+/* BRICKS */
+
+const brickRows = 5;
+
+const brickColumns = 9;
+
+const brickWidth = 65;
+
+const brickHeight = 20;
+
+const brickGap = 10;
+
+const brickTop = 60;
+
+const brickLeft = 20;
+
+let bricks = [];
+
+
+function createBricks() {
+
+    bricks = [];
+
+    for (
+        let row = 0;
+        row < brickRows;
+        row++
+    ) {
+
+        for (
+            let column = 0;
+            column < brickColumns;
+            column++
+        ) {
+
+            bricks.push({
+
+                x:
+                    brickLeft +
+                    column *
+                    (brickWidth + brickGap),
+
+                y:
+                    brickTop +
+                    row *
+                    (brickHeight + brickGap),
+
+                width:
+                    brickWidth,
+
+                height:
+                    brickHeight,
+
+                alive: true
+
+            });
+
+        }
+
+    }
+
+}
+
+
+/* KEYBOARD */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        keys[event.key.toLowerCase()] = true;
+
+        if (
+            event.key === "ArrowLeft" ||
+            event.key === "ArrowRight"
+        ) {
+
+            event.preventDefault();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keyup",
+    function(event) {
+
+        keys[event.key.toLowerCase()] = false;
+
+    }
+);
+
+
+/* START */
+
+function startGame() {
+
+    if (gameRunning) {
+        return;
+    }
+
+    gameRunning = true;
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        "Break all the blocks!";
+
+    requestAnimationFrame(gameLoop);
+
+}
+
+
+/* UPDATE */
+
+function update() {
+
+    if (!gameRunning) {
+        return;
+    }
+
+
+    /* PADDLE */
+
+    if (
+        keys["a"] ||
+        keys["arrowleft"]
+    ) {
+
+        paddle.x -=
+            paddle.speed;
+
+    }
+
+
+    if (
+        keys["d"] ||
+        keys["arrowright"]
+    ) {
+
+        paddle.x +=
+            paddle.speed;
+
+    }
+
+
+    /* PADDLE BOUNDARIES */
+
+    if (paddle.x < 0) {
+
+        paddle.x = 0;
+
+    }
+
+
+    if (
+        paddle.x +
+        paddle.width >
+        canvas.width
+    ) {
+
+        paddle.x =
+            canvas.width -
+            paddle.width;
+
+    }
+
+
+    /* BALL */
+
+    ball.x +=
+        ball.speedX;
+
+    ball.y +=
+        ball.speedY;
+
+
+    /* LEFT / RIGHT WALL */
+
+    if (
+        ball.x <= 0 ||
+        ball.x +
+        ball.size >=
+        canvas.width
+    ) {
+
+        ball.speedX *= -1;
+
+    }
+
+
+    /* TOP WALL */
+
+    if (ball.y <= 0) {
+
+        ball.speedY *= -1;
+
+    }
+
+
+    /* PADDLE COLLISION */
+
+    if (
+
+        ball.x +
+        ball.size >=
+        paddle.x &&
+
+        ball.x <=
+        paddle.x +
+        paddle.width &&
+
+        ball.y +
+        ball.size >=
+        paddle.y &&
+
+        ball.y <=
+        paddle.y +
+        paddle.height
+
+    ) {
+
+        ball.speedY =
+            -Math.abs(
+                ball.speedY
+            );
+
+
+        const hitPosition =
+            (
+                ball.x +
+                ball.size / 2
+            ) -
+            (
+                paddle.x +
+                paddle.width / 2
+            );
+
+
+        ball.speedX =
+            hitPosition * 0.08;
+
+    }
+
+
+    /* BRICKS */
+
+    bricks.forEach(
+        function(brick) {
+
+            if (!brick.alive) {
+                return;
+            }
+
+
+            if (
+
+                ball.x +
+                ball.size >=
+                brick.x &&
+
+                ball.x <=
+                brick.x +
+                brick.width &&
+
+                ball.y +
+                ball.size >=
+                brick.y &&
+
+                ball.y <=
+                brick.y +
+                brick.height
+
+            ) {
+
+                brick.alive = false;
+
+                ball.speedY *= -1;
+
+                score += 10;
+
+                document.getElementById(
+                    "score"
+                ).textContent = score;
+
+            }
+
+        }
+    );
+
+
+    /* ALL BRICKS DESTROYED */
+
+    if (
+        bricks.every(
+            brick => !brick.alive
+        )
+    ) {
+
+        gameRunning = false;
+
+        document.getElementById(
+            "message"
+        ).textContent =
+            "🏆 YOU WIN!";
+
+        return;
+
+    }
+
+
+    /* BALL MISSED */
+
+    if (
+        ball.y >
+        canvas.height
+    ) {
+
+        lives--;
+
+        document.getElementById(
+            "lives"
+        ).textContent = lives;
+
+
+        if (lives <= 0) {
+
+            gameRunning = false;
+
+            document.getElementById(
+                "message"
+            ).textContent =
+                "💥 Game Over!";
+
+            return;
+
+        }
+
+
+        resetBall();
+
+    }
+
+}
+
+
+/* RESET BALL */
+
+function resetBall() {
+
+    ball.x = 350;
+
+    ball.y = 430;
+
+    ball.speedX =
+        Math.random() > 0.5
+            ? 4
+            : -4;
+
+    ball.speedY = -4;
+
+}
+
+
+/* DRAW */
+
+function draw() {
+
+
+    /* BACKGROUND */
+
+    ctx.fillStyle =
+        "#111116";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* BRICKS */
+
+    bricks.forEach(
+        function(brick) {
+
+            if (!brick.alive) {
+                return;
+            }
+
+
+            ctx.fillStyle =
+                "#8b5cf6";
+
+
+            ctx.fillRect(
+
+                brick.x,
+
+                brick.y,
+
+                brick.width,
+
+                brick.height
+
+            );
+
+
+            ctx.strokeStyle =
+                "#09090c";
+
+
+            ctx.strokeRect(
+
+                brick.x,
+
+                brick.y,
+
+                brick.width,
+
+                brick.height
+
+            );
+
+        }
+    );
+
+
+    /* PADDLE */
+
+    ctx.fillStyle =
+        "#ffffff";
+
+
+    ctx.fillRect(
+
+        paddle.x,
+
+        paddle.y,
+
+        paddle.width,
+
+        paddle.height
+
+    );
+
+
+    /* BALL */
+
+    ctx.fillStyle =
+        "#8b5cf6";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        ball.x +
+        ball.size / 2,
+
+        ball.y +
+        ball.size / 2,
+
+        ball.size / 2,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+}
+
+
+/* GAME LOOP */
+
+function gameLoop() {
+
+    update();
+
+    draw();
+
+    if (gameRunning) {
+
+        requestAnimationFrame(
+            gameLoop
+        );
+
+    }
+
+}
+
+
+/* RESTART */
+
+function restartGame() {
+
+    score = 0;
+
+    lives = 3;
+
+    gameRunning = false;
+
+    paddle.x = 300;
+
+    resetBall();
+
+    createBricks();
+
+
+    document.getElementById(
+        "score"
+    ).textContent = score;
+
+
+    document.getElementById(
+        "lives"
+    ).textContent = lives;
+
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        "Press Start Game to begin.";
+
+
+    draw();
+
+}
+
+
+/* HOME */
+
+function goHome() {
+
+    window.location.href =
+        "/game-hub/";
+
+}
+
+
+/* INITIALIZE */
+
+createBricks();
+
+draw();
+
+</script>
+
+
+</body>
+
+</html>
