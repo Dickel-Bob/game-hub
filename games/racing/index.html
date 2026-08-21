@@ -23,9 +23,6 @@ body {
     min-height: 100vh;
 }
 
-
-/* NAVBAR */
-
 .navbar {
     height: 70px;
     background: #111116;
@@ -67,9 +64,6 @@ body {
     background: #8b5cf6;
 }
 
-
-/* GAME AREA */
-
 .container {
     max-width: 700px;
     margin: auto;
@@ -88,9 +82,6 @@ h1 {
     color: #888;
     margin-bottom: 20px;
 }
-
-
-/* SCORE */
 
 .score-box {
     display: flex;
@@ -122,9 +113,6 @@ h1 {
     font-weight: bold;
 }
 
-
-/* GAME */
-
 .game-wrapper {
     display: flex;
     justify-content: center;
@@ -142,9 +130,6 @@ canvas {
     box-shadow:
         0 0 30px rgba(139, 92, 246, 0.12);
 }
-
-
-/* BUTTONS */
 
 .controls {
     margin-top: 20px;
@@ -174,9 +159,6 @@ canvas {
     background: #8b5cf6;
 }
 
-
-/* MESSAGE */
-
 .message {
     margin-top: 15px;
 
@@ -184,9 +166,6 @@ canvas {
 
     min-height: 25px;
 }
-
-
-/* MOBILE CONTROLS */
 
 .mobile-controls {
     display: none;
@@ -233,9 +212,6 @@ canvas {
     grid-column: 3;
 }
 
-
-/* MOBILE */
-
 @media (max-width: 600px) {
 
     .navbar {
@@ -265,8 +241,6 @@ canvas {
 <body>
 
 
-<!-- NAVBAR -->
-
 <nav class="navbar">
 
     <div class="logo">
@@ -284,8 +258,6 @@ canvas {
 
 
 
-<!-- GAME -->
-
 <main class="container">
 
     <h1>
@@ -296,8 +268,6 @@ canvas {
         Dodge traffic and chase the highest distance.
     </p>
 
-
-    <!-- SCORE -->
 
     <div class="score-box">
 
@@ -335,7 +305,6 @@ canvas {
     </div>
 
 
-    <!-- GAME -->
 
     <div class="game-wrapper">
 
@@ -348,7 +317,6 @@ canvas {
     </div>
 
 
-    <!-- BUTTONS -->
 
     <div class="controls">
 
@@ -369,6 +337,7 @@ canvas {
     </div>
 
 
+
     <div
         class="message"
         id="message"
@@ -377,7 +346,6 @@ canvas {
     </div>
 
 
-    <!-- MOBILE -->
 
     <div class="mobile-controls">
 
@@ -403,7 +371,6 @@ canvas {
         </button>
 
     </div>
-
 
 </main>
 
@@ -519,7 +486,6 @@ let leftPressed = false;
 let rightPressed = false;
 
 
-
 /* =========================
    HIGH SCORE
 ========================= */
@@ -529,6 +495,30 @@ document
     .textContent =
     highScore;
 
+
+
+/* =========================
+   SPEED SYSTEM
+========================= */
+
+function getDifficultySpeed() {
+
+    /*
+       Starts at 0.
+
+       Every 100 distance:
+       +1 speed.
+
+       Maximum bonus:
+       +10 speed.
+    */
+
+    return Math.min(
+        Math.floor(score / 100),
+        10
+    );
+
+}
 
 
 /* =========================
@@ -621,8 +611,6 @@ function restartGame() {
 function updatePlayer() {
 
 
-    /* ACCELERATE LEFT */
-
     if (leftPressed) {
 
         player.velocity -=
@@ -631,8 +619,6 @@ function updatePlayer() {
     }
 
 
-    /* ACCELERATE RIGHT */
-
     if (rightPressed) {
 
         player.velocity +=
@@ -640,8 +626,6 @@ function updatePlayer() {
 
     }
 
-
-    /* FRICTION */
 
     if (
         !leftPressed &&
@@ -653,8 +637,6 @@ function updatePlayer() {
 
     }
 
-
-    /* MAX SPEED */
 
     if (
         player.velocity >
@@ -678,13 +660,9 @@ function updatePlayer() {
     }
 
 
-    /* MOVE */
-
     player.x +=
         player.velocity;
 
-
-    /* ROAD LIMIT */
 
     const minX =
         roadLeft + 8;
@@ -732,9 +710,18 @@ function updateGame() {
     updatePlayer();
 
 
-    /* ROAD */
+    /* CURRENT DIFFICULTY */
 
-    roadOffset += 8;
+    const difficultySpeed =
+        getDifficultySpeed();
+
+
+    /* ROAD GETS FASTER */
+
+    roadOffset +=
+        8 +
+        difficultySpeed;
+
 
     if (roadOffset >= 60) {
 
@@ -748,7 +735,23 @@ function updateGame() {
     trafficTimer++;
 
 
-    if (trafficTimer > 45) {
+    /*
+       Cars spawn slightly faster
+       as distance increases.
+    */
+
+    const spawnRate =
+        Math.max(
+            25,
+            45 -
+            Math.floor(score / 150)
+        );
+
+
+    if (
+        trafficTimer >
+        spawnRate
+    ) {
 
         createTraffic();
 
@@ -814,7 +817,7 @@ function updateGame() {
     }
 
 
-    /* SCORE */
+    /* DISTANCE */
 
     score += 0.1;
 
@@ -905,6 +908,19 @@ function createTraffic() {
     ];
 
 
+    /*
+       Traffic starts at 5-7.
+
+       Every 100 distance,
+       they get 1 faster.
+
+       Maximum extra speed = 10.
+    */
+
+    const difficultySpeed =
+        getDifficultySpeed();
+
+
     traffic.push({
 
         x: x,
@@ -917,7 +933,8 @@ function createTraffic() {
 
         speed:
             5 +
-            Math.random() * 2,
+            Math.random() * 2 +
+            difficultySpeed,
 
         color:
             colors[
@@ -1196,7 +1213,7 @@ function drawCar(
 
 
 /* =========================
-   INPUT
+   MOBILE
 ========================= */
 
 function pressLeft() {
@@ -1205,7 +1222,9 @@ function pressLeft() {
 
     setTimeout(
         () => {
+
             leftPressed = false;
+
         },
         150
     );
@@ -1219,7 +1238,9 @@ function pressRight() {
 
     setTimeout(
         () => {
+
             rightPressed = false;
+
         },
         150
     );
