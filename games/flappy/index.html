@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Flappy Neon</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #09090c;
+    color: white;
+    min-height: 100vh;
+}
+
+
+/* NAVBAR */
+
+.navbar {
+    height: 70px;
+    background: #111116;
+    border-bottom: 1px solid #292930;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 30px;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #8b5cf6;
+}
+
+.home-button {
+    margin-left: auto;
+
+    background: #202027;
+    border: 1px solid #35353d;
+
+    color: white;
+
+    padding: 10px 18px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.home-button:hover {
+    background: #8b5cf6;
+}
+
+
+/* MAIN */
+
+.container {
+    max-width: 650px;
+    margin: auto;
+
+    padding: 30px 20px;
+
+    text-align: center;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #888;
+    margin-bottom: 20px;
+}
+
+
+/* SCORE */
+
+.score-box {
+    display: flex;
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.score {
+    background: #15151b;
+
+    border: 1px solid #292930;
+
+    border-radius: 8px;
+
+    padding: 10px 25px;
+
+    min-width: 130px;
+}
+
+.score-title {
+    color: #777;
+
+    font-size: 12px;
+
+    margin-bottom: 3px;
+}
+
+.score-number {
+    font-size: 23px;
+
+    font-weight: bold;
+}
+
+
+/* GAME */
+
+.game-wrapper {
+    display: flex;
+
+    justify-content: center;
+}
+
+canvas {
+    background: #111827;
+
+    border: 2px solid #292930;
+
+    border-radius: 10px;
+
+    max-width: 100%;
+
+    box-shadow:
+        0 0 30px rgba(139, 92, 246, 0.12);
+
+    cursor: pointer;
+}
+
+
+/* BUTTONS */
+
+.controls {
+    margin-top: 20px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+}
+
+.control-button {
+    background: #202027;
+
+    border: 1px solid #35353d;
+
+    color: white;
+
+    padding: 10px 20px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+}
+
+.control-button:hover {
+    background: #8b5cf6;
+}
+
+
+/* MESSAGE */
+
+.message {
+    margin-top: 15px;
+
+    color: #aaa;
+
+    min-height: 25px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .navbar {
+        padding: 0 15px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    canvas {
+        width: 100%;
+        height: auto;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🎮 <span>Game</span> Hub
+    </div>
+
+    <button
+        class="home-button"
+        onclick="goHome()"
+    >
+        ← Game Hub
+    </button>
+
+</nav>
+
+
+
+<!-- GAME -->
+
+<main class="container">
+
+    <h1>
+        🐦 Flappy Neon
+    </h1>
+
+    <p class="subtitle">
+        Fly through the pipes and beat your high score.
+    </p>
+
+
+    <!-- SCORE -->
+
+    <div class="score-box">
+
+        <div class="score">
+
+            <div class="score-title">
+                SCORE
+            </div>
+
+            <div
+                class="score-number"
+                id="score"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="score">
+
+            <div class="score-title">
+                HIGH SCORE
+            </div>
+
+            <div
+                class="score-number"
+                id="highScore"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CANVAS -->
+
+    <div class="game-wrapper">
+
+        <canvas
+            id="gameCanvas"
+            width="500"
+            height="700"
+        ></canvas>
+
+    </div>
+
+
+
+    <!-- BUTTONS -->
+
+    <div class="controls">
+
+        <button
+            class="control-button"
+            onclick="startGame()"
+        >
+            Start Game
+        </button>
+
+        <button
+            class="control-button"
+            onclick="restartGame()"
+        >
+            Restart
+        </button>
+
+    </div>
+
+
+    <div
+        class="message"
+        id="message"
+    >
+        Press Space or click the game to flap.
+    </div>
+
+
+</main>
+
+
+
+<script>
+
+
+/* =========================
+   GAME HUB
+========================= */
+
+function goHome() {
+
+    window.location.href =
+        "https://game-hub.jakejmanz.workers.dev/";
+
+}
+
+
+
+/* =========================
+   CANVAS
+========================= */
+
+const canvas =
+    document.getElementById(
+        "gameCanvas"
+    );
+
+const ctx =
+    canvas.getContext("2d");
+
+
+
+/* =========================
+   GAME SETTINGS
+========================= */
+
+const gravity = 0.45;
+
+const flapStrength = -8;
+
+const pipeWidth = 70;
+
+const pipeGap = 180;
+
+const pipeSpeed = 3.2;
+
+
+
+/* =========================
+   PLAYER
+========================= */
+
+let bird = {
+
+    x: 120,
+
+    y: 330,
+
+    width: 35,
+
+    height: 28,
+
+    velocity: 0
+
+};
+
+
+
+/* =========================
+   PIPES
+========================= */
+
+let pipes = [];
+
+
+
+/* =========================
+   GAME VARIABLES
+========================= */
+
+let score = 0;
+
+let highScore =
+    Number(
+        localStorage.getItem(
+            "flappyHighScore"
+        )
+    ) || 0;
+
+let gameRunning = false;
+
+let gameOver = false;
+
+let animation;
+
+let pipeTimer = 0;
+
+
+
+/* =========================
+   HIGH SCORE
+========================= */
+
+document
+    .getElementById("highScore")
+    .textContent =
+    highScore;
+
+
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame() {
+
+    if (gameRunning) {
+        flap();
+        return;
+    }
+
+
+    if (gameOver) {
+
+        restartGame();
+
+    }
+
+
+    gameRunning = true;
+
+    gameOver = false;
+
+
+    document
+        .getElementById("message")
+        .textContent =
+        "Click or press Space to flap!";
+
+
+    flap();
+
+
+    animation =
+        requestAnimationFrame(
+            updateGame
+        );
+
+}
+
+
+
+/* =========================
+   RESTART
+========================= */
+
+function restartGame() {
+
+    cancelAnimationFrame(
+        animation
+    );
+
+
+    bird.x = 120;
+
+    bird.y = 330;
+
+    bird.velocity = 0;
+
+
+    pipes = [];
+
+    score = 0;
+
+    pipeTimer = 0;
+
+    gameRunning = false;
+
+    gameOver = false;
+
+
+    document
+        .getElementById("score")
+        .textContent =
+        "0";
+
+
+    document
+        .getElementById("message")
+        .textContent =
+        "Press Space or click the game to flap.";
+
+
+    drawGame();
+
+}
+
+
+
+/* =========================
+   FLAP
+========================= */
+
+function flap() {
+
+    if (!gameRunning) {
+        return;
+    }
+
+
+    bird.velocity =
+        flapStrength;
+
+}
+
+
+
+/* =========================
+   UPDATE GAME
+========================= */
+
+function updateGame() {
+
+    if (!gameRunning) {
+        return;
+    }
+
+
+    /* BIRD */
+
+    bird.velocity +=
+        gravity;
+
+    bird.y +=
+        bird.velocity;
+
+
+
+    /* PIPE TIMER */
+
+    pipeTimer++;
+
+
+    if (
+        pipeTimer >= 95
+    ) {
+
+        createPipe();
+
+        pipeTimer = 0;
+
+    }
+
+
+
+    /* MOVE PIPES */
+
+    pipes.forEach(
+        pipe => {
+
+            pipe.x -=
+                pipeSpeed;
+
+        }
+    );
+
+
+
+    /* SCORE */
+
+    pipes.forEach(
+        pipe => {
+
+            if (
+                !pipe.passed &&
+                pipe.x +
+                pipeWidth <
+                bird.x
+            ) {
+
+                pipe.passed =
+                    true;
+
+                score++;
+
+
+                document
+                    .getElementById(
+                        "score"
+                    )
+                    .textContent =
+                    score;
+
+
+                if (
+                    score >
+                    highScore
+                ) {
+
+                    highScore =
+                        score;
+
+
+                    localStorage.setItem(
+                        "flappyHighScore",
+                        highScore
+                    );
+
+
+                    document
+                        .getElementById(
+                            "highScore"
+                        )
+                        .textContent =
+                        highScore;
+
+                }
+
+            }
+
+        }
+    );
+
+
+
+    /* REMOVE OLD PIPES */
+
+    pipes =
+        pipes.filter(
+            pipe =>
+                pipe.x +
+                pipeWidth >
+                -20
+        );
+
+
+
+    /* COLLISION */
+
+    if (
+        checkCollision()
+    ) {
+
+        endGame();
+
+        return;
+
+    }
+
+
+
+    /* DRAW */
+
+    drawGame();
+
+
+    animation =
+        requestAnimationFrame(
+            updateGame
+        );
+
+}
+
+
+
+/* =========================
+   CREATE PIPE
+========================= */
+
+function createPipe() {
+
+    const minTop = 80;
+
+    const maxTop =
+        canvas.height -
+        pipeGap -
+        120;
+
+
+    const topHeight =
+        Math.floor(
+            Math.random() *
+            (
+                maxTop -
+                minTop
+            )
+        ) +
+        minTop;
+
+
+    pipes.push({
+
+        x: canvas.width,
+
+        topHeight:
+            topHeight,
+
+        bottomY:
+            topHeight +
+            pipeGap,
+
+        passed: false
+
+    });
+
+}
+
+
+
+/* =========================
+   COLLISION
+========================= */
+
+function checkCollision() {
+
+
+    /* CEILING */
+
+    if (
+        bird.y <= 0
+    ) {
+
+        return true;
+
+    }
+
+
+    /* FLOOR */
+
+    if (
+        bird.y +
+        bird.height >=
+        canvas.height
+    ) {
+
+        return true;
+
+    }
+
+
+    /* PIPES */
+
+    for (
+        let pipe of pipes
+    ) {
+
+
+        const horizontal =
+            bird.x +
+            bird.width >
+            pipe.x &&
+
+            bird.x <
+            pipe.x +
+            pipeWidth;
+
+
+        if (!horizontal) {
+            continue;
+        }
+
+
+        const hitsTop =
+            bird.y <
+            pipe.topHeight;
+
+
+        const hitsBottom =
+            bird.y +
+            bird.height >
+            pipe.bottomY;
+
+
+        if (
+            hitsTop ||
+            hitsBottom
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+
+/* =========================
+   GAME OVER
+========================= */
+
+function endGame() {
+
+    gameRunning = false;
+
+    gameOver = true;
+
+
+    cancelAnimationFrame(
+        animation
+    );
+
+
+    document
+        .getElementById(
+            "message"
+        )
+        .textContent =
+        "💥 Game Over! Press Restart to try again.";
+
+
+    drawGame();
+
+}
+
+
+
+/* =========================
+   DRAW GAME
+========================= */
+
+function drawGame() {
+
+
+    /* SKY */
+
+    const gradient =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            canvas.height
+        );
+
+
+    gradient.addColorStop(
+        0,
+        "#111827"
+    );
+
+
+    gradient.addColorStop(
+        1,
+        "#1e293b"
+    );
+
+
+    ctx.fillStyle =
+        gradient;
+
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+
+    /* CLOUDS */
+
+    drawCloud(
+        70,
+        120,
+        0.8
+    );
+
+
+    drawCloud(
+        350,
+        210,
+        0.6
+    );
+
+
+    drawCloud(
+        230,
+        70,
+        0.5
+    );
+
+
+
+    /* PIPES */
+
+    pipes.forEach(
+        pipe => {
+
+            drawPipe(
+                pipe
+            );
+
+        }
+    );
+
+
+
+    /* GROUND */
+
+    ctx.fillStyle =
+        "#16a34a";
+
+
+    ctx.fillRect(
+        0,
+        canvas.height - 25,
+        canvas.width,
+        25
+    );
+
+
+    ctx.fillStyle =
+        "#22c55e";
+
+
+    ctx.fillRect(
+        0,
+        canvas.height - 25,
+        canvas.width,
+        6
+    );
+
+
+
+    /* BIRD */
+
+    drawBird();
+
+}
+
+
+
+/* =========================
+   DRAW PIPE
+========================= */
+
+function drawPipe(
+    pipe
+) {
+
+
+    /* TOP PIPE */
+
+    ctx.fillStyle =
+        "#22c55e";
+
+
+    ctx.fillRect(
+
+        pipe.x,
+
+        0,
+
+        pipeWidth,
+
+        pipe.topHeight
+
+    );
+
+
+    /* TOP PIPE CAP */
+
+    ctx.fillStyle =
+        "#16a34a";
+
+
+    ctx.fillRect(
+
+        pipe.x - 5,
+
+        pipe.topHeight - 20,
+
+        pipeWidth + 10,
+
+        20
+
+    );
+
+
+
+    /* BOTTOM PIPE */
+
+    ctx.fillStyle =
+        "#22c55e";
+
+
+    ctx.fillRect(
+
+        pipe.x,
+
+        pipe.bottomY,
+
+        pipeWidth,
+
+        canvas.height -
+        pipe.bottomY
+
+    );
+
+
+    /* BOTTOM CAP */
+
+    ctx.fillStyle =
+        "#16a34a";
+
+
+    ctx.fillRect(
+
+        pipe.x - 5,
+
+        pipe.bottomY,
+
+        pipeWidth + 10,
+
+        20
+
+    );
+
+
+
+    /* PIPE HIGHLIGHT */
+
+    ctx.fillStyle =
+        "rgba(255,255,255,0.15)";
+
+
+    ctx.fillRect(
+
+        pipe.x + 10,
+
+        0,
+
+        8,
+
+        pipe.topHeight - 20
+
+    );
+
+
+    ctx.fillRect(
+
+        pipe.x + 10,
+
+        pipe.bottomY + 20,
+
+        8,
+
+        canvas.height -
+        pipe.bottomY -
+        20
+
+    );
+
+}
+
+
+
+/* =========================
+   DRAW BIRD
+========================= */
+
+function drawBird() {
+
+
+    /* BODY */
+
+    ctx.fillStyle =
+        "#facc15";
+
+
+    ctx.beginPath();
+
+
+    ctx.ellipse(
+
+        bird.x +
+        17,
+
+        bird.y +
+        14,
+
+        18,
+
+        14,
+
+        0,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+
+    ctx.fill();
+
+
+
+    /* WING */
+
+    ctx.fillStyle =
+        "#eab308";
+
+
+    ctx.beginPath();
+
+
+    ctx.ellipse(
+
+        bird.x +
+        8,
+
+        bird.y +
+        18,
+
+        9,
+
+        6,
+
+        0,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+
+    ctx.fill();
+
+
+
+    /* EYE */
+
+    ctx.fillStyle =
+        "#fff";
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+
+        bird.x +
+        25,
+
+        bird.y +
+        8,
+
+        6,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+
+    ctx.fill();
+
+
+    ctx.fillStyle =
+        "#111";
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+
+        bird.x +
+        27,
+
+        bird.y +
+        8,
+
+        3,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+
+    ctx.fill();
+
+
+
+    /* BEAK */
+
+    ctx.fillStyle =
+        "#f97316";
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+
+        bird.x +
+        33,
+
+        bird.y +
+        13
+
+    );
+
+
+    ctx.lineTo(
+
+        bird.x +
+        45,
+
+        bird.y +
+        18
+
+    );
+
+
+    ctx.lineTo(
+
+        bird.x +
+        33,
+
+        bird.y +
+        22
+
+    );
+
+
+    ctx.closePath();
+
+
+    ctx.fill();
+
+}
+
+
+
+/* =========================
+   CLOUDS
+========================= */
+
+function drawCloud(
+    x,
+    y,
+    scale
+) {
+
+    ctx.fillStyle =
+        "rgba(255,255,255,0.08)";
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+        x,
+        y,
+        25 * scale,
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.arc(
+        x + 25 * scale,
+        y - 10 * scale,
+        30 * scale,
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.arc(
+        x + 55 * scale,
+        y,
+        25 * scale,
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.fill();
+
+}
+
+
+
+/* =========================
+   CONTROLS
+========================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.code === "Space" ||
+            event.key === "ArrowUp"
+        ) {
+
+            event.preventDefault();
+
+
+            if (!gameRunning) {
+
+                startGame();
+
+            }
+
+            else {
+
+                flap();
+
+            }
+
+        }
+
+    }
+);
+
+
+
+/* MOUSE */
+
+canvas.addEventListener(
+    "mousedown",
+    function() {
+
+        if (!gameRunning) {
+
+            startGame();
+
+        }
+
+        else {
+
+            flap();
+
+        }
+
+    }
+);
+
+
+
+/* TOUCH */
+
+canvas.addEventListener(
+    "touchstart",
+    function(event) {
+
+        event.preventDefault();
+
+
+        if (!gameRunning) {
+
+            startGame();
+
+        }
+
+        else {
+
+            flap();
+
+        }
+
+    }
+);
+
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+restartGame();
+
+</script>
+
+
+</body>
+
+</html>
