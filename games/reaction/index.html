@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Reaction Time</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #09090c;
+    color: white;
+    min-height: 100vh;
+}
+
+
+/* NAVBAR */
+
+.navbar {
+    height: 70px;
+
+    background: #111116;
+
+    border-bottom: 1px solid #292930;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 30px;
+}
+
+.logo {
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #8b5cf6;
+}
+
+.home-button {
+    margin-left: auto;
+
+    background: #202027;
+
+    border: 1px solid #35353d;
+
+    color: white;
+
+    padding: 10px 18px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.home-button:hover {
+    background: #8b5cf6;
+}
+
+
+/* MAIN */
+
+.container {
+    max-width: 850px;
+
+    margin: auto;
+
+    padding: 35px 20px;
+
+    text-align: center;
+}
+
+h1 {
+    font-size: 38px;
+
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #888;
+
+    margin-bottom: 25px;
+}
+
+
+/* SCORE */
+
+.score-box {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+.score {
+    background: #15151b;
+
+    border: 1px solid #292930;
+
+    border-radius: 8px;
+
+    padding: 12px 25px;
+
+    min-width: 150px;
+}
+
+.score-title {
+    color: #777;
+
+    font-size: 12px;
+
+    margin-bottom: 4px;
+}
+
+.score-number {
+    font-size: 25px;
+
+    font-weight: bold;
+}
+
+
+/* REACTION BOX */
+
+.reaction-box {
+
+    width: 100%;
+
+    height: 430px;
+
+    background: #15151b;
+
+    border: 2px solid #292930;
+
+    border-radius: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    transition:
+        background 0.1s,
+        border-color 0.1s;
+
+}
+
+.reaction-box:hover {
+    border-color: #444;
+}
+
+
+/* WAITING */
+
+.reaction-box.waiting {
+
+    background: #16161c;
+
+}
+
+
+/* READY */
+
+.reaction-box.ready {
+
+    background: #16a34a;
+
+    border-color: #22c55e;
+
+}
+
+
+/* TOO EARLY */
+
+.reaction-box.too-early {
+
+    background: #dc2626;
+
+    border-color: #ef4444;
+
+}
+
+
+/* RESULT */
+
+.reaction-box.result {
+
+    background: #8b5cf6;
+
+    border-color: #a78bfa;
+
+}
+
+
+.reaction-content {
+
+    padding: 20px;
+
+}
+
+
+.reaction-icon {
+
+    font-size: 70px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.reaction-title {
+
+    font-size: 35px;
+
+    font-weight: bold;
+
+    margin-bottom: 10px;
+
+}
+
+
+.reaction-text {
+
+    color: #ccc;
+
+    font-size: 17px;
+
+}
+
+
+/* BUTTON */
+
+.controls {
+
+    margin-top: 20px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+}
+
+
+.control-button {
+
+    background: #202027;
+
+    border: 1px solid #35353d;
+
+    color: white;
+
+    padding: 11px 22px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+}
+
+
+.control-button:hover {
+
+    background: #8b5cf6;
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .navbar {
+        padding: 0 15px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .reaction-box {
+        height: 350px;
+    }
+
+    .reaction-title {
+        font-size: 28px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🎮 <span>Game</span> Hub
+    </div>
+
+
+    <button
+        class="home-button"
+        onclick="goHome()"
+    >
+        ← Game Hub
+    </button>
+
+</nav>
+
+
+
+<!-- MAIN -->
+
+<main class="container">
+
+
+    <h1>
+        ⚡ Reaction Time
+    </h1>
+
+
+    <p class="subtitle">
+        Wait for green, then click as fast as you can!
+    </p>
+
+
+
+    <!-- SCORES -->
+
+    <div class="score-box">
+
+
+        <div class="score">
+
+            <div class="score-title">
+                LAST TIME
+            </div>
+
+            <div
+                class="score-number"
+                id="lastTime"
+            >
+                —
+            </div>
+
+        </div>
+
+
+
+        <div class="score">
+
+            <div class="score-title">
+                BEST TIME
+            </div>
+
+            <div
+                class="score-number"
+                id="bestTime"
+            >
+                —
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- GAME -->
+
+    <div
+        class="reaction-box waiting"
+        id="reactionBox"
+        onclick="boxClicked()"
+    >
+
+
+        <div class="reaction-content">
+
+
+            <div
+                class="reaction-icon"
+                id="reactionIcon"
+            >
+                ⚡
+            </div>
+
+
+            <div
+                class="reaction-title"
+                id="reactionTitle"
+            >
+                Click to Start
+            </div>
+
+
+            <div
+                class="reaction-text"
+                id="reactionText"
+            >
+                Wait for the screen to turn green.
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- BUTTONS -->
+
+    <div class="controls">
+
+
+        <button
+            class="control-button"
+            onclick="startGame()"
+        >
+            Start Game
+        </button>
+
+
+        <button
+            class="control-button"
+            onclick="resetGame()"
+        >
+            Reset Best
+        </button>
+
+
+    </div>
+
+
+</main>
+
+
+
+<script>
+
+
+/* =========================
+   GAME HUB
+========================= */
+
+function goHome() {
+
+    window.location.href =
+        "https://game-hub.jakejmanz.workers.dev/";
+
+}
+
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const box =
+    document.getElementById(
+        "reactionBox"
+    );
+
+
+const icon =
+    document.getElementById(
+        "reactionIcon"
+    );
+
+
+const title =
+    document.getElementById(
+        "reactionTitle"
+    );
+
+
+const text =
+    document.getElementById(
+        "reactionText"
+    );
+
+
+const lastTime =
+    document.getElementById(
+        "lastTime"
+    );
+
+
+const bestTime =
+    document.getElementById(
+        "bestTime"
+    );
+
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+let gameState =
+    "idle";
+
+let startTime = 0;
+
+let timeout;
+
+let best =
+    Number(
+        localStorage.getItem(
+            "reactionBest"
+        )
+    ) || null;
+
+
+
+/* =========================
+   SHOW BEST
+========================= */
+
+if (best !== null) {
+
+    bestTime.textContent =
+        best + " ms";
+
+}
+
+
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame() {
+
+
+    clearTimeout(timeout);
+
+
+    gameState =
+        "waiting";
+
+
+    box.className =
+        "reaction-box waiting";
+
+
+    icon.textContent =
+        "⏳";
+
+
+    title.textContent =
+        "Wait...";
+
+
+    text.textContent =
+        "Don't click yet!";
+
+
+    /*
+       Random wait between
+       2 and 5 seconds.
+    */
+
+    const delay =
+        Math.floor(
+            Math.random() *
+            3000
+        ) + 2000;
+
+
+    timeout =
+        setTimeout(
+            makeReady,
+            delay
+        );
+
+}
+
+
+
+/* =========================
+   READY
+========================= */
+
+function makeReady() {
+
+
+    gameState =
+        "ready";
+
+
+    startTime =
+        performance.now();
+
+
+    box.className =
+        "reaction-box ready";
+
+
+    icon.textContent =
+        "🟢";
+
+
+    title.textContent =
+        "CLICK!";
+
+
+    text.textContent =
+        "CLICK NOW!";
+
+}
+
+
+
+/* =========================
+   CLICK
+========================= */
+
+function boxClicked() {
+
+
+    /* IDLE */
+
+    if (
+        gameState === "idle"
+    ) {
+
+        startGame();
+
+        return;
+
+    }
+
+
+    /* WAITING */
+
+    if (
+        gameState === "waiting"
+    ) {
+
+        clearTimeout(timeout);
+
+
+        gameState =
+            "too-early";
+
+
+        box.className =
+            "reaction-box too-early";
+
+
+        icon.textContent =
+            "❌";
+
+
+        title.textContent =
+            "Too Early!";
+
+
+        text.textContent =
+            "You clicked before it turned green. Click to try again.";
+
+        return;
+
+    }
+
+
+    /* READY */
+
+    if (
+        gameState === "ready"
+    ) {
+
+        const endTime =
+            performance.now();
+
+
+        const reaction =
+            Math.round(
+                endTime -
+                startTime
+            );
+
+
+        finishGame(
+            reaction
+        );
+
+    }
+
+
+    /* TOO EARLY */
+
+    else if (
+        gameState === "too-early"
+    ) {
+
+        startGame();
+
+    }
+
+
+    /* RESULT */
+
+    else if (
+        gameState === "result"
+    ) {
+
+        startGame();
+
+    }
+
+}
+
+
+
+/* =========================
+   FINISH
+========================= */
+
+function finishGame(
+    reaction
+) {
+
+
+    gameState =
+        "result";
+
+
+    box.className =
+        "reaction-box result";
+
+
+    icon.textContent =
+        "⚡";
+
+
+    title.textContent =
+        reaction + " ms";
+
+
+    text.textContent =
+        getReactionMessage(
+            reaction
+        );
+
+
+    lastTime.textContent =
+        reaction + " ms";
+
+
+    /* BEST */
+
+    if (
+        best === null ||
+        reaction < best
+    ) {
+
+        best =
+            reaction;
+
+
+        localStorage.setItem(
+            "reactionBest",
+            best
+        );
+
+
+        bestTime.textContent =
+            best + " ms";
+
+
+        text.textContent =
+            "🔥 NEW BEST! " +
+            getReactionMessage(
+                reaction
+            );
+
+    }
+
+}
+
+
+
+/* =========================
+   MESSAGES
+========================= */
+
+function getReactionMessage(
+    reaction
+) {
+
+
+    if (
+        reaction < 200
+    ) {
+
+        return "Insane reaction time!";
+
+    }
+
+
+    if (
+        reaction < 250
+    ) {
+
+        return "Very fast!";
+
+    }
+
+
+    if (
+        reaction < 300
+    ) {
+
+        return "Great reaction!";
+
+    }
+
+
+    if (
+        reaction < 400
+    ) {
+
+        return "Pretty good!";
+
+    }
+
+
+    if (
+        reaction < 500
+    ) {
+
+        return "Not bad!";
+
+    }
+
+
+    return "You can definitely beat that!";
+
+}
+
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetGame() {
+
+
+    clearTimeout(timeout);
+
+
+    gameState =
+        "idle";
+
+
+    best =
+        null;
+
+
+    localStorage.removeItem(
+        "reactionBest"
+    );
+
+
+    lastTime.textContent =
+        "—";
+
+
+    bestTime.textContent =
+        "—";
+
+
+    box.className =
+        "reaction-box waiting";
+
+
+    icon.textContent =
+        "⚡";
+
+
+    title.textContent =
+        "Click to Start";
+
+
+    text.textContent =
+        "Wait for the screen to turn green.";
+
+}
+
+</script>
+
+
+</body>
+
+</html>
