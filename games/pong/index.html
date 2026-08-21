@@ -16,13 +16,9 @@
 
 body {
     margin: 0;
-
     background: #09090c;
-
     color: white;
-
     font-family: Arial, sans-serif;
-
     text-align: center;
 }
 
@@ -37,31 +33,48 @@ p {
 
 #game {
     background: #111116;
-
     border: 2px solid #333;
-
     border-radius: 10px;
-
     max-width: 95vw;
 }
 
 .score {
     font-size: 28px;
-
     margin: 12px;
 }
 
-button {
+.difficulty {
+    margin: 15px;
+}
+
+.difficulty button {
+    margin: 5px;
+    padding: 10px 18px;
+
+    border: 1px solid #444;
+    border-radius: 7px;
+
+    background: #18181f;
+    color: white;
+
+    cursor: pointer;
+}
+
+.difficulty button:hover,
+.difficulty button.selected {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+}
+
+.controls button {
     margin: 8px;
 
     padding: 11px 18px;
 
     border: none;
-
     border-radius: 7px;
 
     background: #8b5cf6;
-
     color: white;
 
     font-weight: bold;
@@ -69,8 +82,14 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.controls button:hover {
     background: #7446d8;
+}
+
+#message {
+    min-height: 25px;
+    color: #aaa;
+    margin: 10px;
 }
 
 </style>
@@ -88,13 +107,46 @@ Use W/S or the arrow keys to move your paddle.
 </p>
 
 
+<div class="difficulty">
+
+    <strong>Difficulty:</strong>
+
+    <button
+        id="easy"
+        onclick="setDifficulty('easy')"
+    >
+        Easy
+    </button>
+
+    <button
+        id="normal"
+        class="selected"
+        onclick="setDifficulty('normal')"
+    >
+        Normal
+    </button>
+
+    <button
+        id="hard"
+        onclick="setDifficulty('hard')"
+    >
+        Hard
+    </button>
+
+</div>
+
+
 <div class="score">
 
-    <span id="playerScore">0</span>
+    <span id="playerScore">
+        0
+    </span>
 
     &nbsp;&nbsp; - &nbsp;&nbsp;
 
-    <span id="computerScore">0</span>
+    <span id="computerScore">
+        0
+    </span>
 
 </div>
 
@@ -106,17 +158,26 @@ Use W/S or the arrow keys to move your paddle.
 </canvas>
 
 
-<br>
+<div id="message">
+    Choose a difficulty and press Start.
+</div>
 
 
-<button onclick="restartGame()">
-    Restart
-</button>
+<div class="controls">
 
+    <button onclick="startGame()">
+        Start Game
+    </button>
 
-<button onclick="goHome()">
-    ← Game Hub
-</button>
+    <button onclick="restartGame()">
+        Restart
+    </button>
+
+    <button onclick="goHome()">
+        ← Game Hub
+    </button>
+
+</div>
 
 
 
@@ -159,7 +220,7 @@ const computer = {
 
     height: 100,
 
-    speed: 4.5
+    speed: 3.5
 
 };
 
@@ -176,7 +237,7 @@ const ball = {
 
     speedX: 5,
 
-    speedY: 3
+    speedY: 2.5
 
 };
 
@@ -187,7 +248,49 @@ let computerScore = 0;
 
 let keys = {};
 
-let gameRunning = true;
+let gameRunning = false;
+
+let difficulty = "normal";
+
+let aiReaction = 0;
+
+
+
+/* DIFFICULTY SETTINGS */
+
+const difficulties = {
+
+    easy: {
+
+        aiSpeed: 2.6,
+
+        reaction: 0.18,
+
+        ballSpeed: 4.5
+
+    },
+
+    normal: {
+
+        aiSpeed: 3.6,
+
+        reaction: 0.35,
+
+        ballSpeed: 5
+
+    },
+
+    hard: {
+
+        aiSpeed: 5,
+
+        reaction: 0.65,
+
+        ballSpeed: 6
+
+    }
+
+};
 
 
 
@@ -223,6 +326,40 @@ document.addEventListener(
 
 
 
+/* CHOOSE DIFFICULTY */
+
+function setDifficulty(level) {
+
+    difficulty = level;
+
+
+    document
+        .querySelectorAll(".difficulty button")
+        .forEach(button => {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        });
+
+
+    document
+        .getElementById(level)
+        .classList.add("selected");
+
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        level.charAt(0).toUpperCase() +
+        level.slice(1) +
+        " difficulty selected.";
+
+}
+
+
+
 /* RESET BALL */
 
 function resetBall(direction) {
@@ -231,11 +368,80 @@ function resetBall(direction) {
 
     ball.y = 250;
 
+
+    const settings =
+        difficulties[difficulty];
+
+
     ball.speedX =
-        5 * direction;
+        settings.ballSpeed *
+        direction;
+
 
     ball.speedY =
-        (Math.random() * 6) - 3;
+        (Math.random() * 5) - 2.5;
+
+}
+
+
+
+/* START GAME */
+
+function startGame() {
+
+    playerScore = 0;
+
+    computerScore = 0;
+
+    player.y = 200;
+
+    computer.y = 200;
+
+    gameRunning = true;
+
+    updateScore();
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        "First to 5 wins!";
+
+
+    resetBall(
+        Math.random() > 0.5
+            ? 1
+            : -1
+    );
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+
+/* GAME LOOP */
+
+function gameLoop() {
+
+    if (!gameRunning) {
+
+        draw();
+
+        return;
+
+    }
+
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
@@ -246,14 +452,11 @@ function resetBall(direction) {
 function update() {
 
 
-    if (!gameRunning) {
-
-        return;
-
-    }
+    const settings =
+        difficulties[difficulty];
 
 
-    /* PLAYER MOVEMENT */
+    /* PLAYER */
 
     if (
         keys["w"] ||
@@ -277,7 +480,7 @@ function update() {
     }
 
 
-    /* KEEP PLAYER ON SCREEN */
+    /* PLAYER BOUNDARIES */
 
     if (player.y < 0) {
 
@@ -301,34 +504,54 @@ function update() {
 
     /* COMPUTER AI */
 
-    const computerCenter =
-        computer.y +
+    const target =
+        ball.y -
         computer.height / 2;
 
 
-    if (
-        computerCenter <
-        ball.y
-    ) {
+    const difference =
+        target - computer.y;
 
-        computer.y +=
-            computer.speed;
+
+    /*
+       Reaction makes the AI
+       deliberately imperfect.
+    */
+
+    aiReaction +=
+        settings.reaction;
+
+
+    if (aiReaction >= 1) {
+
+        aiReaction = 0;
+
+
+        if (
+            Math.abs(difference) >
+            10
+        ) {
+
+            if (difference > 0) {
+
+                computer.y +=
+                    settings.aiSpeed;
+
+            }
+
+            else {
+
+                computer.y -=
+                    settings.aiSpeed;
+
+            }
+
+        }
 
     }
 
 
-    if (
-        computerCenter >
-        ball.y
-    ) {
-
-        computer.y -=
-            computer.speed;
-
-    }
-
-
-    /* KEEP COMPUTER ON SCREEN */
+    /* COMPUTER BOUNDARIES */
 
     if (computer.y < 0) {
 
@@ -350,7 +573,7 @@ function update() {
     }
 
 
-    /* MOVE BALL */
+    /* BALL */
 
     ball.x +=
         ball.speedX;
@@ -359,11 +582,12 @@ function update() {
         ball.speedY;
 
 
-    /* TOP/BOTTOM */
+    /* TOP AND BOTTOM */
 
     if (
         ball.y <= 0 ||
-        ball.y + ball.size >=
+        ball.y +
+        ball.size >=
         canvas.height
     ) {
 
@@ -395,7 +619,8 @@ function update() {
     ) {
 
         ball.speedX =
-            Math.abs(ball.speedX) + 0.2;
+            Math.abs(ball.speedX) + 0.15;
+
 
         const hitPosition =
             (
@@ -406,6 +631,7 @@ function update() {
                 player.y +
                 player.height / 2
             );
+
 
         ball.speedY =
             hitPosition * 0.08;
@@ -436,7 +662,8 @@ function update() {
     ) {
 
         ball.speedX =
-            -Math.abs(ball.speedX) - 0.2;
+            -Math.abs(ball.speedX) - 0.15;
+
 
         const hitPosition =
             (
@@ -448,13 +675,14 @@ function update() {
                 computer.height / 2
             );
 
+
         ball.speedY =
             hitPosition * 0.08;
 
     }
 
 
-    /* PLAYER MISSED */
+    /* COMPUTER SCORES */
 
     if (ball.x < 0) {
 
@@ -467,7 +695,7 @@ function update() {
     }
 
 
-    /* COMPUTER MISSED */
+    /* PLAYER SCORES */
 
     if (
         ball.x >
@@ -492,39 +720,29 @@ function update() {
 
         gameRunning = false;
 
-        setTimeout(
-            function() {
 
-                if (
-                    playerScore >
-                    computerScore
-                ) {
+        if (
+            playerScore >
+            computerScore
+        ) {
 
-                    alert(
-                        "🏆 You Win!"
-                    );
+            document.getElementById(
+                "message"
+            ).textContent =
+                "🏆 YOU WIN!";
 
-                }
+        }
 
-                else {
+        else {
 
-                    alert(
-                        "🤖 Computer Wins!"
-                    );
+            document.getElementById(
+                "message"
+            ).textContent =
+                "🤖 Computer wins!";
 
-                }
-
-            },
-            100
-        );
+        }
 
     }
-
-
-    draw();
-
-
-    requestAnimationFrame(update);
 
 }
 
@@ -654,25 +872,28 @@ function updateScore() {
 
 function restartGame() {
 
-    player.y = 200;
-
-    computer.y = 200;
+    gameRunning = false;
 
     playerScore = 0;
 
     computerScore = 0;
 
-    gameRunning = true;
+    player.y = 200;
+
+    computer.y = 200;
 
     updateScore();
 
-    resetBall(
-        Math.random() > 0.5
-            ? 1
-            : -1
-    );
+    resetBall(1);
 
-    update();
+
+    document.getElementById(
+        "message"
+    ).textContent =
+        "Press Start Game.";
+
+
+    draw();
 
 }
 
@@ -689,13 +910,9 @@ function goHome() {
 
 
 
-/* START */
-
-resetBall(1);
+/* INITIAL DRAW */
 
 draw();
-
-update();
 
 </script>
 
