@@ -5,17 +5,11 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Game Hub</title>
 
-
 <style>
-
-/* =========================
-   GENERAL
-========================= */
 
 * {
     box-sizing: border-box;
@@ -24,13 +18,10 @@
 }
 
 body {
-
     font-family: Arial, Helvetica, sans-serif;
-
     background: #09090c;
-
     color: white;
-
+    min-height: 100vh;
 }
 
 
@@ -39,7 +30,6 @@ body {
 ========================= */
 
 .navbar {
-
     height: 70px;
 
     background: #111116;
@@ -50,100 +40,83 @@ body {
 
     align-items: center;
 
-    padding: 0 35px;
+    padding: 0 40px;
 
     position: sticky;
 
     top: 0;
 
     z-index: 100;
-
 }
 
-.logo {
 
-    font-size: 24px;
+.logo {
+    font-size: 25px;
 
     font-weight: bold;
 
     white-space: nowrap;
-
 }
 
+
 .logo span {
-
     color: #8b5cf6;
-
 }
 
 
 .nav-links {
-
     display: flex;
 
-    gap: 25px;
+    gap: 28px;
 
     margin-left: 40px;
-
-    margin-right: auto;
-
 }
 
-.nav-links a {
 
-    color: #999;
+.nav-links a {
+    color: #aaa;
 
     text-decoration: none;
 
     font-size: 14px;
 
+    cursor: pointer;
 }
 
+
 .nav-links a:hover {
-
     color: white;
-
 }
 
 
 .search {
+    margin-left: auto;
 
     width: 260px;
 
-    padding: 11px 15px;
+    background: #18181f;
 
-    background: #19191f;
-
-    border: 1px solid #35353d;
+    border: 1px solid #30303a;
 
     border-radius: 8px;
+
+    padding: 11px 15px;
 
     color: white;
 
     outline: none;
-
 }
+
 
 .search:focus {
-
     border-color: #8b5cf6;
-
 }
 
 
-/* =========================
-   MAIN
-========================= */
-
-.container {
-
-    max-width: 1250px;
-
-    margin: auto;
-
-    padding: 35px 25px;
-
+.search::placeholder {
+    color: #777;
 }
+
 
 
 /* =========================
@@ -151,102 +124,34 @@ body {
 ========================= */
 
 .hero {
+    max-width: 1100px;
 
-    background:
-        linear-gradient(
-            135deg,
-            #1b1728,
-            #101014
-        );
+    margin: auto;
 
-    border: 1px solid #292930;
-
-    border-radius: 16px;
-
-    padding: 50px;
-
-    margin-bottom: 40px;
-
+    padding: 55px 25px 35px;
 }
+
 
 .hero h1 {
+    font-size: 46px;
 
-    font-size: 44px;
-
-    margin-bottom: 10px;
-
+    margin-bottom: 12px;
 }
+
+
+.hero h1 span {
+    color: #8b5cf6;
+}
+
 
 .hero p {
+    color: #888;
 
-    color: #999;
+    font-size: 17px;
 
-    font-size: 16px;
-
-    margin-bottom: 25px;
-
+    max-width: 650px;
 }
 
-.hero-button {
-
-    display: inline-block;
-
-    background: #8b5cf6;
-
-    color: white;
-
-    text-decoration: none;
-
-    padding: 12px 20px;
-
-    border-radius: 8px;
-
-    font-weight: bold;
-
-}
-
-.hero-button:hover {
-
-    background: #7446d8;
-
-}
-
-
-/* =========================
-   SECTION TITLES
-========================= */
-
-.section {
-
-    margin-bottom: 45px;
-
-}
-
-.section-title {
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 18px;
-
-}
-
-.section-title h2 {
-
-    font-size: 24px;
-
-}
-
-.section-title span {
-
-    color: #777;
-
-    font-size: 13px;
-
-}
 
 
 /* =========================
@@ -254,6 +159,11 @@ body {
 ========================= */
 
 .featured {
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 0 25px 40px;
 
     display: grid;
 
@@ -261,69 +171,97 @@ body {
         repeat(2, 1fr);
 
     gap: 18px;
-
 }
 
-.featured-card {
 
-    min-height: 190px;
-
-    border: 1px solid #292930;
-
-    border-radius: 13px;
-
-    padding: 25px;
-
-    text-decoration: none;
-
-    color: white;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: flex-end;
-
+.feature-card {
     background:
         linear-gradient(
             135deg,
-            #211c30,
-            #101014
+            #191720,
+            #121218
         );
 
-    transition: 0.2s;
+    border: 1px solid #292930;
 
+    border-radius: 14px;
+
+    padding: 25px;
+
+    min-height: 150px;
+
+    transition:
+        transform 0.2s,
+        border-color 0.2s;
+
+    cursor: pointer;
 }
 
-.featured-card:hover {
 
-    transform: translateY(-4px);
+.feature-card:hover {
+    transform: translateY(-3px);
 
     border-color: #8b5cf6;
-
 }
 
-.featured-icon {
 
-    font-size: 55px;
+.feature-icon {
+    font-size: 38px;
 
-    margin-bottom: auto;
-
+    margin-bottom: 10px;
 }
 
-.featured-card h3 {
 
-    font-size: 23px;
+.feature-card h2 {
+    font-size: 22px;
 
     margin-bottom: 5px;
-
 }
 
-.featured-card p {
 
-    color: #999;
+.feature-card p {
+    color: #888;
 
+    font-size: 14px;
 }
+
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 0 25px 60px;
+}
+
+
+.section-title {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+
+.section-title h2 {
+    font-size: 25px;
+}
+
+
+.game-count {
+    color: #777;
+
+    font-size: 13px;
+}
+
 
 
 /* =========================
@@ -331,93 +269,86 @@ body {
 ========================= */
 
 .categories {
-
     display: flex;
-
-    flex-wrap: wrap;
 
     gap: 10px;
 
+    margin-bottom: 30px;
+
+    flex-wrap: wrap;
 }
 
+
 .category {
+    background: #18181f;
 
-    background: #17171d;
-
-    border: 1px solid #303039;
+    border: 1px solid #30303a;
 
     color: #aaa;
 
-    padding: 10px 17px;
+    padding: 9px 16px;
 
     border-radius: 7px;
 
     cursor: pointer;
 
+    font-size: 13px;
 }
+
 
 .category:hover,
 .category.active {
-
     background: #8b5cf6;
 
     border-color: #8b5cf6;
 
     color: white;
-
 }
 
 
+
 /* =========================
-   GAMES GRID
+   GAME GRID
 ========================= */
 
-.games {
-
+.game-grid {
     display: grid;
 
     grid-template-columns:
         repeat(4, 1fr);
 
-    gap: 18px;
-
+    gap: 16px;
 }
 
 
-/* =========================
-   GAME CARD
-========================= */
-
-.game {
-
+.game-card {
     background: #15151b;
 
     border: 1px solid #292930;
 
-    border-radius: 11px;
+    border-radius: 10px;
 
     overflow: hidden;
 
-    transition: 0.2s;
+    transition:
+        transform 0.2s,
+        border-color 0.2s;
 
-}
+    display: flex;
 
-.game:hover {
-
-    transform: translateY(-5px);
-
-    border-color: #555;
-
-    box-shadow:
-        0 10px 30px
-        rgba(0,0,0,0.3);
-
+    flex-direction: column;
 }
 
 
-.game-image {
+.game-card:hover {
+    transform: translateY(-4px);
 
-    height: 155px;
+    border-color: #8b5cf6;
+}
+
+
+.game-icon {
+    height: 150px;
 
     display: flex;
 
@@ -425,50 +356,46 @@ body {
 
     justify-content: center;
 
-    font-size: 60px;
-
     background:
         linear-gradient(
             135deg,
-            #24242d,
-            #101014
+            #191920,
+            #121218
         );
 
+    font-size: 65px;
 }
 
 
 .game-info {
-
     padding: 15px;
 
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
 }
 
-.game-info h3 {
 
+.game-info h3 {
     font-size: 17px;
 
     margin-bottom: 5px;
-
 }
 
-.game-info p {
 
+.game-category {
     color: #777;
 
-    font-size: 13px;
+    font-size: 12px;
 
-    margin-bottom: 12px;
-
+    margin-bottom: 15px;
 }
 
 
-/* =========================
-   PLAY BUTTON
-========================= */
-
-.play {
-
-    display: block;
+.play-button {
+    margin-top: auto;
 
     width: 100%;
 
@@ -476,23 +403,40 @@ body {
 
     background: #202027;
 
+    border: 1px solid #30303a;
+
     color: white;
-
-    text-align: center;
-
-    text-decoration: none;
 
     border-radius: 6px;
 
-    font-size: 14px;
+    cursor: pointer;
 
+    font-size: 13px;
 }
 
-.play:hover {
 
+.play-button:hover {
     background: #8b5cf6;
 
+    border-color: #8b5cf6;
 }
+
+
+
+/* =========================
+   NO RESULTS
+========================= */
+
+.no-results {
+    display: none;
+
+    text-align: center;
+
+    padding: 50px;
+
+    color: #777;
+}
+
 
 
 /* =========================
@@ -500,86 +444,73 @@ body {
 ========================= */
 
 footer {
+    border-top: 1px solid #222;
 
-    border-top: 1px solid #24242b;
-
-    margin-top: 60px;
-
-    padding: 30px;
+    padding: 25px;
 
     text-align: center;
 
-    color: #666;
+    color: #555;
 
-    font-size: 13px;
-
+    font-size: 12px;
 }
+
 
 
 /* =========================
    MOBILE
 ========================= */
 
-@media (max-width: 900px) {
+@media (max-width: 850px) {
 
-    .games {
-
+    .game-grid {
         grid-template-columns:
             repeat(2, 1fr);
+    }
 
+    .featured {
+        grid-template-columns:
+            1fr;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .search {
+        width: 220px;
     }
 
 }
 
 
-@media (max-width: 650px) {
+@media (max-width: 550px) {
 
     .navbar {
-
         padding: 0 15px;
-
     }
 
-    .nav-links {
-
-        display: none;
-
+    .logo {
+        font-size: 20px;
     }
 
     .search {
+        width: 150px;
 
-        width: 170px;
-
-    }
-
-    .container {
-
-        padding: 25px 15px;
-
+        margin-left: 15px;
     }
 
     .hero {
-
-        padding: 30px;
-
+        padding-top: 35px;
     }
 
     .hero h1 {
-
-        font-size: 32px;
-
+        font-size: 35px;
     }
 
-    .featured {
-
-        grid-template-columns: 1fr;
-
-    }
-
-    .games {
-
-        grid-template-columns: 1fr;
-
+    .game-grid {
+        grid-template-columns:
+            1fr;
     }
 
 }
@@ -598,25 +529,22 @@ footer {
 
 <nav class="navbar">
 
-
     <div class="logo">
-
         🎮 <span>Game</span> Hub
-
     </div>
 
 
     <div class="nav-links">
 
-        <a href="#home">
+        <a onclick="scrollHome()">
             Home
         </a>
 
-        <a href="#games">
+        <a onclick="scrollGames()">
             Games
         </a>
 
-        <a href="#categories">
+        <a onclick="scrollCategories()">
             Categories
         </a>
 
@@ -625,18 +553,14 @@ footer {
 
     <input
         class="search"
-        id="search"
+        id="searchInput"
         type="text"
         placeholder="🔎 Search games..."
-        onkeyup="searchGames()"
+        oninput="searchGames()"
     >
-
 
 </nav>
 
-
-
-<main class="container">
 
 
 <!-- =========================
@@ -648,30 +572,16 @@ footer {
     id="home"
 >
 
-
     <h1>
-
-        Play. Have Fun.
-
+        Welcome to
+        <span>Game Hub</span>
     </h1>
 
 
     <p>
-
-        Play browser games instantly.
-
+        Free browser games you can play instantly.
+        No downloads. Pick a game and start playing.
     </p>
-
-
-    <a
-        href="#games"
-        class="hero-button"
-    >
-
-        Browse Games
-
-    </a>
-
 
 </section>
 
@@ -681,161 +591,60 @@ footer {
      FEATURED
 ========================= -->
 
-<section class="section">
+<section class="featured">
 
 
-    <div class="section-title">
+    <div
+        class="feature-card"
+        onclick="playGame('racing')"
+    >
+
+        <div class="feature-icon">
+            🏎️
+        </div>
 
         <h2>
-            🔥 Featured Games
+            Neon Racer
         </h2>
 
-        <span>
-            4 games available
-        </span>
+        <p>
+            Dodge traffic and chase the highest distance.
+        </p>
 
     </div>
 
 
 
-    <div class="featured">
+    <div
+        class="feature-card"
+        onclick="playGame('snake')"
+    >
 
+        <div class="feature-icon">
+            🐍
+        </div>
 
-        <!-- RACING -->
+        <h2>
+            Neon Snake
+        </h2>
 
-        <a
-            href="/games/racing/"
-            class="featured-card"
-        >
-
-            <div class="featured-icon">
-                🏎️
-            </div>
-
-            <h3>
-                Neon Racer
-            </h3>
-
-            <p>
-                Dodge traffic and chase the highest distance.
-            </p>
-
-        </a>
-
-
-
-        <!-- SNAKE -->
-
-        <a
-            href="/games/snake/"
-            class="featured-card"
-        >
-
-            <div class="featured-icon">
-                🐍
-            </div>
-
-            <h3>
-                Neon Snake
-            </h3>
-
-            <p>
-                Eat the food and beat your high score.
-            </p>
-
-        </a>
-
+        <p>
+            Eat the food and beat your high score.
+        </p>
 
     </div>
+
 
 </section>
 
 
 
 <!-- =========================
-     CATEGORIES
+     GAMES
 ========================= -->
 
-<section
-    class="section"
-    id="categories"
->
-
-
-    <div class="section-title">
-
-        <h2>
-            Categories
-        </h2>
-
-    </div>
-
-
-    <div class="categories">
-
-
-        <button
-            class="category active"
-            onclick="filterGames('all', this)"
-        >
-
-            All Games
-
-        </button>
-
-
-        <button
-            class="category"
-            onclick="filterGames('arcade', this)"
-        >
-
-            Arcade
-
-        </button>
-
-
-        <button
-            class="category"
-            onclick="filterGames('racing', this)"
-        >
-
-            Racing
-
-        </button>
-
-
-        <button
-            class="category"
-            onclick="filterGames('puzzle', this)"
-        >
-
-            Puzzle
-
-        </button>
-
-
-        <button
-            class="category"
-            onclick="filterGames('action', this)"
-        >
-
-            Action
-
-        </button>
-
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================
-     ALL GAMES
-========================= -->
-
-<section
-    class="section"
+<main
+    class="content"
     id="games"
 >
 
@@ -846,33 +655,87 @@ footer {
             🎮 All Games
         </h2>
 
-        <span id="gameCount">
-            4 games
-        </span>
+        <div
+            class="game-count"
+            id="gameCount"
+        >
+            7 games
+        </div>
 
     </div>
 
 
 
+    <!-- CATEGORIES -->
+
     <div
-        class="games"
-        id="gameList"
+        class="categories"
+        id="categories"
     >
 
+        <button
+            class="category active"
+            onclick="filterGames('all', this)"
+        >
+            All Games
+        </button>
+
+
+        <button
+            class="category"
+            onclick="filterGames('arcade', this)"
+        >
+            Arcade
+        </button>
+
+
+        <button
+            class="category"
+            onclick="filterGames('racing', this)"
+        >
+            Racing
+        </button>
+
+
+        <button
+            class="category"
+            onclick="filterGames('puzzle', this)"
+        >
+            Puzzle
+        </button>
+
+
+        <button
+            class="category"
+            onclick="filterGames('action', this)"
+        >
+            Action
+        </button>
+
+
+    </div>
+
+
+
+    <!-- GAME GRID -->
+
+    <div
+        class="game-grid"
+        id="gameGrid"
+    >
 
 
         <!-- SNAKE -->
 
         <div
-            class="game"
+            class="game-card"
+            data-name="snake neon snake"
             data-category="arcade"
-            data-name="Neon Snake"
         >
 
-            <div class="game-image">
+            <div class="game-icon">
                 🐍
             </div>
-
 
             <div class="game-info">
 
@@ -880,17 +743,16 @@ footer {
                     Neon Snake
                 </h3>
 
-                <p>
+                <div class="game-category">
                     Arcade
-                </p>
+                </div>
 
-
-                <a
-                    href="/games/snake/"
-                    class="play"
+                <button
+                    class="play-button"
+                    onclick="playGame('snake')"
                 >
                     ▶ Play Game
-                </a>
+                </button>
 
             </div>
 
@@ -901,15 +763,14 @@ footer {
         <!-- RACING -->
 
         <div
-            class="game"
+            class="game-card"
+            data-name="racing neon racer car racing"
             data-category="racing"
-            data-name="Neon Racer"
         >
 
-            <div class="game-image">
+            <div class="game-icon">
                 🏎️
             </div>
-
 
             <div class="game-info">
 
@@ -917,17 +778,16 @@ footer {
                     Neon Racer
                 </h3>
 
-                <p>
+                <div class="game-category">
                     Racing
-                </p>
+                </div>
 
-
-                <a
-                    href="/games/racing/"
-                    class="play"
+                <button
+                    class="play-button"
+                    onclick="playGame('racing')"
                 >
                     ▶ Play Game
-                </a>
+                </button>
 
             </div>
 
@@ -938,15 +798,14 @@ footer {
         <!-- PONG -->
 
         <div
-            class="game"
+            class="game-card"
+            data-name="pong neon pong"
             data-category="arcade"
-            data-name="Neon Pong"
         >
 
-            <div class="game-image">
+            <div class="game-icon">
                 🏓
             </div>
-
 
             <div class="game-info">
 
@@ -954,17 +813,16 @@ footer {
                     Neon Pong
                 </h3>
 
-                <p>
+                <div class="game-category">
                     Arcade
-                </p>
+                </div>
 
-
-                <a
-                    href="/games/pong/"
-                    class="play"
+                <button
+                    class="play-button"
+                    onclick="playGame('pong')"
                 >
                     ▶ Play Game
-                </a>
+                </button>
 
             </div>
 
@@ -975,15 +833,14 @@ footer {
         <!-- BREAKOUT -->
 
         <div
-            class="game"
+            class="game-card"
+            data-name="breakout neon breakout"
             data-category="arcade"
-            data-name="Neon Breakout"
         >
 
-            <div class="game-image">
+            <div class="game-icon">
                 🧱
             </div>
-
 
             <div class="game-info">
 
@@ -991,17 +848,121 @@ footer {
                     Neon Breakout
                 </h3>
 
-                <p>
+                <div class="game-category">
                     Arcade
-                </p>
+                </div>
 
-
-                <a
-                    href="/games/breakout/"
-                    class="play"
+                <button
+                    class="play-button"
+                    onclick="playGame('breakout')"
                 >
                     ▶ Play Game
-                </a>
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- REACTION -->
+
+        <div
+            class="game-card"
+            data-name="reaction reaction time speed reflex"
+            data-category="action"
+        >
+
+            <div class="game-icon">
+                ⚡
+            </div>
+
+            <div class="game-info">
+
+                <h3>
+                    Reaction Time
+                </h3>
+
+                <div class="game-category">
+                    Action
+                </div>
+
+                <button
+                    class="play-button"
+                    onclick="playGame('reaction')"
+                >
+                    ▶ Play Game
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- FLAPPY -->
+
+        <div
+            class="game-card"
+            data-name="flappy flappy neon bird"
+            data-category="arcade"
+        >
+
+            <div class="game-icon">
+                🐦
+            </div>
+
+            <div class="game-info">
+
+                <h3>
+                    Flappy Neon
+                </h3>
+
+                <div class="game-category">
+                    Arcade
+                </div>
+
+                <button
+                    class="play-button"
+                    onclick="playGame('flappy')"
+                >
+                    ▶ Play Game
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- 2048 -->
+
+        <div
+            class="game-card"
+            data-name="2048 neon 2048 numbers puzzle"
+            data-category="puzzle"
+        >
+
+            <div class="game-icon">
+                🧩
+            </div>
+
+            <div class="game-info">
+
+                <h3>
+                    Neon 2048
+                </h3>
+
+                <div class="game-category">
+                    Puzzle
+                </div>
+
+                <button
+                    class="play-button"
+                    onclick="playGame('2048')"
+                >
+                    ▶ Play Game
+                </button>
 
             </div>
 
@@ -1010,7 +971,14 @@ footer {
 
     </div>
 
-</section>
+
+
+    <div
+        class="no-results"
+        id="noResults"
+    >
+        No games found.
+    </div>
 
 
 </main>
@@ -1023,7 +991,7 @@ footer {
 
 <footer>
 
-    Game Hub • Browser Games
+    🎮 Game Hub · Browser Games
 
 </footer>
 
@@ -1033,51 +1001,68 @@ footer {
 
 
 /* =========================
+   GAME LINKS
+========================= */
+
+function playGame(game) {
+
+    window.location.href =
+        "/games/" +
+        game +
+        "/";
+
+}
+
+
+
+/* =========================
    SEARCH
 ========================= */
 
 function searchGames() {
 
-
     const search =
         document
-        .getElementById("search")
-        .value
-        .toLowerCase();
+            .getElementById(
+                "searchInput"
+            )
+            .value
+            .toLowerCase()
+            .trim();
 
 
-    const games =
-        document.querySelectorAll(".game");
+    const cards =
+        document.querySelectorAll(
+            ".game-card"
+        );
 
 
-    let count = 0;
+    let visible =
+        0;
 
 
-    games.forEach(
-        function(game) {
-
+    cards.forEach(
+        card => {
 
             const name =
-                game
-                .dataset
-                .name
-                .toLowerCase();
+                card.dataset.name
+                    .toLowerCase();
 
 
             if (
                 name.includes(search)
             ) {
 
-                game.style.display =
-                    "";
+                card.style.display =
+                    "flex";
 
-                count++;
+                visible++;
 
             }
 
             else {
 
-                game.style.display =
+                card.style.display =
                     "none";
 
             }
@@ -1087,19 +1072,33 @@ function searchGames() {
 
 
     document
-        .getElementById("gameCount")
+        .getElementById(
+            "gameCount"
+        )
         .textContent =
-        count +
-        (count === 1
-            ? " game"
-            : " games");
+        visible +
+        (
+            visible === 1
+                ? " game"
+                : " games"
+        );
+
+
+    document
+        .getElementById(
+            "noResults"
+        )
+        .style.display =
+        visible === 0
+            ? "block"
+            : "none";
 
 }
 
 
 
 /* =========================
-   CATEGORY FILTER
+   FILTER
 ========================= */
 
 function filterGames(
@@ -1108,56 +1107,57 @@ function filterGames(
 ) {
 
 
-    const games =
-        document
-        .querySelectorAll(".game");
+    const cards =
+        document.querySelectorAll(
+            ".game-card"
+        );
 
 
     const buttons =
-        document
-        .querySelectorAll(".category");
+        document.querySelectorAll(
+            ".category"
+        );
 
 
     buttons.forEach(
-        function(btn) {
-
-            btn.classList
-                .remove("active");
-
-        }
+        b =>
+            b.classList.remove(
+                "active"
+            )
     );
 
 
-    button.classList
-        .add("active");
+    button.classList.add(
+        "active"
+    );
 
 
-    let count = 0;
+    let visible =
+        0;
 
 
-    games.forEach(
-        function(game) {
+    cards.forEach(
+        card => {
+
+            const cardCategory =
+                card.dataset.category;
 
 
             if (
-
                 category === "all" ||
-
-                game.dataset.category ===
-                    category
-
+                cardCategory === category
             ) {
 
-                game.style.display =
-                    "";
+                card.style.display =
+                    "flex";
 
-                count++;
+                visible++;
 
             }
 
             else {
 
-                game.style.display =
+                card.style.display =
                     "none";
 
             }
@@ -1167,12 +1167,65 @@ function filterGames(
 
 
     document
-        .getElementById("gameCount")
+        .getElementById(
+            "gameCount"
+        )
         .textContent =
-        count +
-        (count === 1
-            ? " game"
-            : " games");
+        visible +
+        (
+            visible === 1
+                ? " game"
+                : " games"
+        );
+
+
+    document
+        .getElementById(
+            "noResults"
+        )
+        .style.display =
+        "none";
+
+}
+
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function scrollHome() {
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+function scrollGames() {
+
+    document
+        .getElementById(
+            "games"
+        )
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+
+function scrollCategories() {
+
+    document
+        .getElementById(
+            "categories"
+        )
+        .scrollIntoView({
+            behavior: "smooth"
+        });
 
 }
 
